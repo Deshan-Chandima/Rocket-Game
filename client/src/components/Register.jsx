@@ -32,17 +32,17 @@ export default function Register({ onSwitchToLogin }) {
 
     // Validation
     if (!name || !nickname || !email || !password || !confirmPassword) {
-      setError('Please fill in all required fields.');
+      setError('All fields are mandatory for pilot registration.');
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match. Please re-enter.');
+      setError('Passwords do not match. Re-verify coordinates.');
       return;
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters long.');
+      setError('Security key must contain at least 6 characters.');
       return;
     }
 
@@ -65,39 +65,50 @@ export default function Register({ onSwitchToLogin }) {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Registration failed');
+        throw new Error(data.message || 'Registration sequence aborted.');
       }
 
-      setSuccess('Account created successfully! Redirecting to login...');
+      setSuccess('Identity registered in registry! Initializing login...');
       setTimeout(() => {
         onSwitchToLogin();
       }, 1500);
     } catch (err) {
-      setError(err.message || 'Failed to connect to the server.');
+      setError(err.message || 'Cannot communicate with central station.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="brand-header">
-        <span className="brand-icon">🚀</span>
-        <h1 className="brand-title">SPACE FUEL</h1>
-        <p className="brand-subtitle">Create your virtual pilot identity</p>
+    <div className="retro-card">
+      <div className="card-header-block">
+        <span className="card-tag">Identity Terminal</span>
+        <h2 className="card-heading">PILOT REGISTRY</h2>
+        <p className="card-desc">Initialize your virtual credentials for mission access</p>
       </div>
 
-      {error && <div className="alert alert-error">{error}</div>}
-      {success && <div className="alert alert-success">{success}</div>}
+      {error && (
+        <div className="retro-alert alert-error">
+          <span>⚠️</span>
+          <span>{error}</span>
+        </div>
+      )}
+
+      {success && (
+        <div className="retro-alert alert-success">
+          <span>✅</span>
+          <span>{success}</span>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="auth-form">
         <div className="form-group">
-          <label htmlFor="name">Full Name</label>
+          <label className="form-label" htmlFor="name">Full Name</label>
           <input
             id="name"
             name="name"
             type="text"
-            className="form-control"
+            className="retro-input"
             placeholder="e.g. Neil Armstrong"
             value={formData.name}
             onChange={handleChange}
@@ -107,12 +118,12 @@ export default function Register({ onSwitchToLogin }) {
         </div>
 
         <div className="form-group">
-          <label htmlFor="nickname">Pilot Nickname</label>
+          <label className="form-label" htmlFor="nickname">Pilot Nickname</label>
           <input
             id="nickname"
             name="nickname"
             type="text"
-            className="form-control"
+            className="retro-input"
             placeholder="e.g. StarVoyager"
             value={formData.nickname}
             onChange={handleChange}
@@ -121,13 +132,13 @@ export default function Register({ onSwitchToLogin }) {
         </div>
 
         <div className="form-group">
-          <label htmlFor="email">Email Address</label>
+          <label className="form-label" htmlFor="email">Comms Email</label>
           <input
             id="email"
             name="email"
             type="email"
-            className="form-control"
-            placeholder="pilot@spacefuel.io"
+            className="retro-input"
+            placeholder="pilot@spacefuel.station"
             value={formData.email}
             onChange={handleChange}
             autoComplete="email"
@@ -136,13 +147,13 @@ export default function Register({ onSwitchToLogin }) {
         </div>
 
         <div className="form-group">
-          <label htmlFor="password">Password</label>
+          <label className="form-label" htmlFor="password">Security Password</label>
           <input
             id="password"
             name="password"
             type="password"
-            className="form-control"
-            placeholder="At least 6 characters"
+            className="retro-input"
+            placeholder="Min 6 characters"
             value={formData.password}
             onChange={handleChange}
             autoComplete="new-password"
@@ -151,13 +162,13 @@ export default function Register({ onSwitchToLogin }) {
         </div>
 
         <div className="form-group">
-          <label htmlFor="confirmPassword">Confirm Password</label>
+          <label className="form-label" htmlFor="confirmPassword">Verify Password</label>
           <input
             id="confirmPassword"
             name="confirmPassword"
             type="password"
-            className="form-control"
-            placeholder="Re-enter your password"
+            className="retro-input"
+            placeholder="Repeat password"
             value={formData.confirmPassword}
             onChange={handleChange}
             autoComplete="new-password"
@@ -165,18 +176,17 @@ export default function Register({ onSwitchToLogin }) {
           />
         </div>
 
-        <button type="submit" className="auth-btn" disabled={loading}>
-          {loading ? 'Initializing Pilot...' : 'Register Identity'}
+        <button type="submit" className="retro-btn" disabled={loading}>
+          {loading ? 'REGISTERING...' : 'REGISTER IDENTITY'}
         </button>
       </form>
 
-      <div className="auth-footer">
-        Already registered?
-        <button type="button" className="auth-link" onClick={onSwitchToLogin}>
-          Log In
+      <div className="card-footer">
+        Already an authorized pilot?
+        <button type="button" className="card-link" onClick={onSwitchToLogin}>
+          Log In Here
         </button>
       </div>
     </div>
   );
 }
-

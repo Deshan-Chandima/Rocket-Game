@@ -26,7 +26,7 @@ export default function Login({ onLoginSuccess, onSwitchToRegister }) {
     const { email, password } = formData;
 
     if (!email || !password) {
-      setError('Please provide both email and password.');
+      setError('Please provide registered email and password.');
       return;
     }
 
@@ -47,41 +47,45 @@ export default function Login({ onLoginSuccess, onSwitchToRegister }) {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Invalid login credentials.');
+        throw new Error(data.message || 'Access denied. Invalid credentials.');
       }
 
-      // Login successful: pass user object to parent
       if (data.user) {
         onLoginSuccess(data.user);
       } else {
-        throw new Error('User data missing in server response.');
+        throw new Error('User information not received from server.');
       }
     } catch (err) {
-      setError(err.message || 'Failed to connect to the server.');
+      setError(err.message || 'Cannot communicate with central station.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="brand-header">
-        <span className="brand-icon">🚀</span>
-        <h1 className="brand-title">SPACE FUEL</h1>
-        <p className="brand-subtitle">Access your virtual pilot terminal</p>
+    <div className="retro-card">
+      <div className="card-header-block">
+        <span className="card-tag">Access Gate</span>
+        <h2 className="card-heading">PILOT LOGIN</h2>
+        <p className="card-desc">Authenticate your terminal credentials to commence</p>
       </div>
 
-      {error && <div className="alert alert-error">{error}</div>}
+      {error && (
+        <div className="retro-alert alert-error">
+          <span>⚠️</span>
+          <span>{error}</span>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="auth-form">
         <div className="form-group">
-          <label htmlFor="email">Email Address</label>
+          <label className="form-label" htmlFor="email">Comms Email</label>
           <input
             id="email"
             name="email"
             type="email"
-            className="form-control"
-            placeholder="pilot@spacefuel.io"
+            className="retro-input"
+            placeholder="pilot@spacefuel.station"
             value={formData.email}
             onChange={handleChange}
             autoComplete="email"
@@ -90,13 +94,13 @@ export default function Login({ onLoginSuccess, onSwitchToRegister }) {
         </div>
 
         <div className="form-group">
-          <label htmlFor="password">Password</label>
+          <label className="form-label" htmlFor="password">Security Password</label>
           <input
             id="password"
             name="password"
             type="password"
-            className="form-control"
-            placeholder="Enter your password"
+            className="retro-input"
+            placeholder="Enter security key"
             value={formData.password}
             onChange={handleChange}
             autoComplete="current-password"
@@ -104,18 +108,17 @@ export default function Login({ onLoginSuccess, onSwitchToRegister }) {
           />
         </div>
 
-        <button type="submit" className="auth-btn" disabled={loading}>
-          {loading ? 'Authenticating...' : 'Launch Session (Login)'}
+        <button type="submit" className="retro-btn" disabled={loading}>
+          {loading ? 'AUTHENTICATING...' : 'LOGIN TO TERMINAL'}
         </button>
       </form>
 
-      <div className="auth-footer">
-        Don't have a pilot identity yet?
-        <button type="button" className="auth-link" onClick={onSwitchToRegister}>
-          Register Here
+      <div className="card-footer">
+        Unregistered pilot entity?
+        <button type="button" className="card-link" onClick={onSwitchToRegister}>
+          Register Identity
         </button>
       </div>
     </div>
   );
 }
-

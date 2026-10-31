@@ -1,46 +1,63 @@
 import React from 'react';
 
 export default function Welcome({ user, onLogout }) {
-  const nickname = user?.nickname || 'Pilot';
+  const nickname = user?.nickname || 'PILOT';
 
   return (
-    <div className="auth-container welcome-card">
-      <div className="brand-header">
-        <span className="brand-icon">🚀</span>
-        <div className="welcome-badge">Command Center Active</div>
+    <div className="retro-card welcome-card-wide">
+      <div className="card-header-block">
+        <div className="welcome-stamp">STATUS: CLEARED FOR LAUNCH</div>
         
-        {/* Required Welcome Message */}
-        <h1 className="welcome-headline">
-          Welcome to Space Fuel, <span className="highlight-nickname">{nickname}</span>!
+        {/* Exact Required Welcome Message */}
+        <h1 className="welcome-title">
+          Welcome to Space Fuel, <span className="nickname-highlight">[{nickname}]</span>!
         </h1>
-        <p className="mission-text">Mission is ready.</p>
-      </div>
-
-      <div className="user-profile-details">
-        <div className="detail-item">
-          <span className="detail-label">Pilot Name</span>
-          <span className="detail-value">{user?.name || '-'}</span>
-        </div>
-        <div className="detail-item">
-          <span className="detail-label">Callsign / Nickname</span>
-          <span className="detail-value">{user?.nickname || '-'}</span>
-        </div>
-        <div className="detail-item">
-          <span className="detail-label">Registered Email</span>
-          <span className="detail-value">{user?.email || '-'}</span>
-        </div>
-        <div className="detail-item">
-          <span className="detail-label">System Status</span>
-          <span className="detail-value" style={{ color: '#4ade80' }}>● Online & Authorized</span>
+        <div className="mission-ready-banner">
+          ✦ MISSION IS READY ✦
         </div>
       </div>
 
-      <div>
-        <button type="button" className="logout-btn" onClick={onLogout}>
-          Abort / Log Out
+      <div className="pilot-data-grid">
+        <div className="data-cell">
+          <span className="cell-label">Pilot Identity</span>
+          <span className="cell-value">{user?.name || '-'}</span>
+        </div>
+        <div className="data-cell">
+          <span className="cell-label">Assigned Callsign</span>
+          <span className="cell-value" style={{ color: 'var(--coral-primary)' }}>
+            {user?.nickname || '-'}
+          </span>
+        </div>
+        <div className="data-cell">
+          <span className="cell-label">Subspace Frequency</span>
+          <span className="cell-value">{user?.email || '-'}</span>
+        </div>
+        <div className="data-cell">
+          <span className="cell-label">Thruster Ignition</span>
+          <span className="cell-value" style={{ color: 'var(--teal-accent)' }}>
+            ● ONLINE (100% FUEL)
+          </span>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+        <button
+          type="button"
+          className="retro-btn retro-btn-teal"
+          onClick={() => alert('Rocket Engines Initialized! Have a safe journey into deep space!')}
+        >
+          LAUNCH SPACECRAFT
+        </button>
+
+        <button
+          type="button"
+          className="retro-btn"
+          style={{ background: '#25344d', color: '#f87171', boxShadow: '0 4px 0 #151e2e' }}
+          onClick={onLogout}
+        >
+          DISCONNECT
         </button>
       </div>
     </div>
   );
 }
-
