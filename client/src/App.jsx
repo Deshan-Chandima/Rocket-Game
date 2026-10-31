@@ -3,10 +3,11 @@ import Navbar from './components/Navbar.jsx';
 import Login from './components/Login.jsx';
 import Register from './components/Register.jsx';
 import Welcome from './components/Welcome.jsx';
-import GenericSection from './components/GenericSection.jsx';
+import ComingSoon from './components/ComingSoon.jsx';
 
 export default function App() {
-  const [activeView, setActiveView] = useState('home'); // 'home' | 'about' | 'games' | 'pricing' | 'faqs' | 'login' | 'register' | 'welcome'
+  // Default to 'login' so authentication pages are front and center
+  const [activeView, setActiveView] = useState('login'); // 'login' | 'register' | 'welcome' | 'home' | 'about' | 'games'
   const [currentUser, setCurrentUser] = useState(null);
 
   const handleLoginSuccess = (userData) => {
@@ -34,7 +35,7 @@ export default function App() {
         onLogout={handleLogout}
       />
 
-      {/* 2. Main Hero Banner matching .SPACE. CENTEE / CENTER reference */}
+      {/* 2. Main Hero Banner matching .SPACE. CENTEE reference */}
       <header className="hero-banner">
         <div className="hero-title-wrapper">
           <span className="pixel-box-accent"></span>
@@ -45,9 +46,9 @@ export default function App() {
         <div className="hero-divider"></div>
       </header>
 
-      {/* 3. Main Interactive View Container */}
+      {/* 3. Main Stage Content */}
       <main className="content-stage">
-        {/* Auth: Login View */}
+        {/* Active Page: Login */}
         {activeView === 'login' && (
           <Login
             onLoginSuccess={handleLoginSuccess}
@@ -55,14 +56,14 @@ export default function App() {
           />
         )}
 
-        {/* Auth: Register View */}
+        {/* Active Page: Register */}
         {activeView === 'register' && (
           <Register
             onSwitchToLogin={() => setActiveView('login')}
           />
         )}
 
-        {/* Auth Success: Welcome & Mission Ready */}
+        {/* Active Page: Welcome (Post-Login) */}
         {activeView === 'welcome' && (
           <Welcome
             user={currentUser}
@@ -70,10 +71,10 @@ export default function App() {
           />
         )}
 
-        {/* Generic Sections: Home, About, Games, Pricing, FAQs */}
-        {['home', 'about', 'games', 'pricing', 'faqs'].includes(activeView) && (
-          <GenericSection
-            view={activeView}
+        {/* Other Pages: Home, About, Games (Say "Coming Soon") */}
+        {['home', 'about', 'games'].includes(activeView) && (
+          <ComingSoon
+            pageName={activeView}
             onNavigate={handleNavigate}
             user={currentUser}
           />

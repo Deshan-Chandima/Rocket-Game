@@ -1156,6 +1156,82 @@ html, body {
   letter-spacing: 1px;
 }
 
+/* ==========================================================================
+   COMING SOON COMPONENT STYLES
+   ========================================================================== */
+.coming-soon-card {
+  max-width: 650px;
+  text-align: center;
+}
+
+.coming-soon-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.coming-soon-icon-box {
+  position: relative;
+  display: inline-block;
+  font-size: 3rem;
+  margin-bottom: 1.25rem;
+}
+
+.radar-icon {
+  display: inline-block;
+  animation: radarPulse 2s infinite ease-in-out;
+}
+
+.coming-soon-title {
+  font-family: var(--font-pixel);
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  letter-spacing: 4px;
+  color: var(--coral-accent);
+  margin-bottom: 0.65rem;
+  text-shadow: 3px 3px 0px #000;
+}
+
+.coming-soon-subtitle {
+  font-family: var(--font-arcade);
+  font-size: 0.88rem;
+  color: var(--teal-accent);
+  letter-spacing: 1.5px;
+  margin-bottom: 1.25rem;
+}
+
+.highlight-section {
+  color: var(--amber-lamp);
+  text-decoration: underline;
+}
+
+.coming-soon-desc {
+  font-size: 0.96rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  max-width: 500px;
+  margin: 1.5rem auto;
+}
+
+.coming-soon-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+@keyframes radarPulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 5px rgba(245, 151, 121, 0.4));
+  }
+  50% {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 15px rgba(245, 151, 121, 0.9));
+  }
+}
+
 /* Keyframes */
 @keyframes cardFadeIn {
   from {

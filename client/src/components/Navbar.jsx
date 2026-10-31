@@ -11,7 +11,7 @@ export default function Navbar({ activeView, onNavigate, user, onLogout }) {
   return (
     <nav className="retro-navbar">
       <div className="navbar-container">
-        {/* Left Navigation Links */}
+        {/* Left Navigation Links: Home, About, Games */}
         <div className={`nav-group nav-left ${mobileMenuOpen ? 'mobile-show' : ''}`}>
           <button
             type="button"
@@ -39,10 +39,10 @@ export default function Navbar({ activeView, onNavigate, user, onLogout }) {
         {/* Center Logo Banner */}
         <div
           className="nav-center-banner"
-          onClick={() => handleNavClick('home')}
+          onClick={() => handleNavClick('login')}
           role="button"
           tabIndex={0}
-          title="Return to Home"
+          title="Space Center"
         >
           <div className="ribbon-wing wing-left"></div>
           <div className="ribbon-body">
@@ -53,23 +53,8 @@ export default function Navbar({ activeView, onNavigate, user, onLogout }) {
           <div className="ribbon-wing wing-right"></div>
         </div>
 
-        {/* Right Navigation Links */}
+        {/* Right Navigation Links: Only Login & Register */}
         <div className={`nav-group nav-right ${mobileMenuOpen ? 'mobile-show' : ''}`}>
-          <button
-            type="button"
-            className={`nav-link-btn ${activeView === 'pricing' ? 'active' : ''}`}
-            onClick={() => handleNavClick('pricing')}
-          >
-            Pricing
-          </button>
-          <button
-            type="button"
-            className={`nav-link-btn ${activeView === 'faqs' ? 'active' : ''}`}
-            onClick={() => handleNavClick('faqs')}
-          >
-            FAQs
-          </button>
-
           {user ? (
             <div className="user-nav-profile">
               <button
