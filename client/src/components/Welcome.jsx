@@ -1,61 +1,67 @@
 import React from 'react';
 
 export default function Welcome({ user, onLogout }) {
-  const nickname = user?.nickname || 'PILOT';
+  const nickname = user?.nickname || 'Pilot';
 
   return (
-    <div className="retro-card welcome-card-wide">
-      <div className="card-header-block">
-        <div className="welcome-stamp">STATUS: CLEARED FOR LAUNCH</div>
-        
-        {/* Exact Required Welcome Message */}
-        <h1 className="welcome-title">
-          Welcome to Space Fuel, <span className="nickname-highlight">[{nickname}]</span>!
+    <div className="retro-auth-card welcome-console-card">
+      <div className="card-terminal-bar">
+        <span className="terminal-dot green"></span>
+        <span className="terminal-dot green"></span>
+        <span className="terminal-dot green"></span>
+        <span className="terminal-title">MISSION_CONTROL // COCKPIT_HUD</span>
+      </div>
+
+      <div className="welcome-console-header">
+        <div className="status-badge-retro">
+          <span className="blinking-cursor">■</span> TELEMETRY ACTIVE
+        </div>
+
+        {/* Required User Welcome Message */}
+        <h1 className="welcome-retro-headline">
+          Welcome to Space Fuel, <span className="nickname-accent">{nickname}</span>!
         </h1>
-        <div className="mission-ready-banner">
-          ✦ MISSION IS READY ✦
+        <p className="mission-status-headline">Mission is ready.</p>
+        <div className="section-divider"></div>
+      </div>
+
+      <div className="telemetry-grid">
+        <div className="telemetry-card">
+          <span className="tel-label">CREW CALLSIGN</span>
+          <span className="tel-value">{user?.nickname || 'PILOT_UNKNOWN'}</span>
+        </div>
+
+        <div className="telemetry-card">
+          <span className="tel-label">COMMANDER NAME</span>
+          <span className="tel-value">{user?.name || '-'}</span>
+        </div>
+
+        <div className="telemetry-card">
+          <span className="tel-label">TRANSMISSION FREQUENCY</span>
+          <span className="tel-value">{user?.email || '-'}</span>
+        </div>
+
+        <div className="telemetry-card">
+          <span className="tel-label">THRUSTER STATUS</span>
+          <span className="tel-value tel-success">● PLASMA READY [100%]</span>
         </div>
       </div>
 
-      <div className="pilot-data-grid">
-        <div className="data-cell">
-          <span className="cell-label">Pilot Identity</span>
-          <span className="cell-value">{user?.name || '-'}</span>
-        </div>
-        <div className="data-cell">
-          <span className="cell-label">Assigned Callsign</span>
-          <span className="cell-value" style={{ color: 'var(--coral-primary)' }}>
-            {user?.nickname || '-'}
-          </span>
-        </div>
-        <div className="data-cell">
-          <span className="cell-label">Subspace Frequency</span>
-          <span className="cell-value">{user?.email || '-'}</span>
-        </div>
-        <div className="data-cell">
-          <span className="cell-label">Thruster Ignition</span>
-          <span className="cell-value" style={{ color: 'var(--teal-accent)' }}>
-            ● ONLINE (100% FUEL)
-          </span>
-        </div>
-      </div>
-
-      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+      <div className="console-actions">
         <button
           type="button"
-          className="retro-btn retro-btn-teal"
-          onClick={() => alert('Rocket Engines Initialized! Have a safe journey into deep space!')}
+          className="retro-btn btn-coral"
+          onClick={() => alert(`🚀 Mission ignited! Rocket thrusters online for ${nickname}!`)}
         >
-          LAUNCH SPACECRAFT
+          🚀 ENGAGE THRUSTERS
         </button>
 
         <button
           type="button"
-          className="retro-btn"
-          style={{ background: '#25344d', color: '#f87171', boxShadow: '0 4px 0 #151e2e' }}
+          className="retro-btn btn-outline"
           onClick={onLogout}
         >
-          DISCONNECT
+          ✕ ABORT / LOGOUT
         </button>
       </div>
     </div>

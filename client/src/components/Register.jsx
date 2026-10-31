@@ -30,19 +30,19 @@ export default function Register({ onSwitchToLogin }) {
 
     const { name, nickname, email, password, confirmPassword } = formData;
 
-    // Validation
+    // Field Validation
     if (!name || !nickname || !email || !password || !confirmPassword) {
-      setError('All fields are mandatory for pilot registration.');
+      setError('ALL FIELDS ARE REQUIRED TO ISSUE PILOT CREDENTIALS.');
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match. Re-verify coordinates.');
+      setError('PASSWORDS DO NOT MATCH. VERIFY AND RETRY.');
       return;
     }
 
     if (password.length < 6) {
-      setError('Security key must contain at least 6 characters.');
+      setError('SECURITY KEY MUST BE AT LEAST 6 CHARACTERS.');
       return;
     }
 
@@ -65,126 +65,144 @@ export default function Register({ onSwitchToLogin }) {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Registration sequence aborted.');
+        throw new Error(data.message || 'REGISTRATION FAILED AT HOST.');
       }
 
-      setSuccess('Identity registered in registry! Initializing login...');
+      setSuccess('PILOT RECORD REGISTERED! REDIRECTING TO AUTH TERMINAL...');
       setTimeout(() => {
         onSwitchToLogin();
       }, 1500);
     } catch (err) {
-      setError(err.message || 'Cannot communicate with central station.');
+      setError(err.message || 'COULD NOT REACH MISSION CONTROL DATABASE.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="retro-card">
-      <div className="card-header-block">
-        <span className="card-tag">Identity Terminal</span>
-        <h2 className="card-heading">PILOT REGISTRY</h2>
-        <p className="card-desc">Initialize your virtual credentials for mission access</p>
+    <div className="retro-auth-card">
+      <div className="card-terminal-bar">
+        <span className="terminal-dot red"></span>
+        <span className="terminal-dot yellow"></span>
+        <span className="terminal-dot green"></span>
+        <span className="terminal-title">CREW_ENLISTMENT // NEW_RECORD</span>
+      </div>
+
+      <div className="auth-header">
+        <h2 className="auth-pixel-title">ENLIST PILOT</h2>
+        <p className="auth-pixel-subtitle">CREATE TAMPER-PROOF VIRTUAL IDENTITY</p>
       </div>
 
       {error && (
         <div className="retro-alert alert-error">
-          <span>⚠️</span>
+          <span className="alert-icon">⚠️</span>
           <span>{error}</span>
         </div>
       )}
 
       {success && (
         <div className="retro-alert alert-success">
-          <span>✅</span>
+          <span className="alert-icon">✅</span>
           <span>{success}</span>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="auth-form">
-        <div className="form-group">
-          <label className="form-label" htmlFor="name">Full Name</label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            className="retro-input"
-            placeholder="e.g. Neil Armstrong"
-            value={formData.name}
-            onChange={handleChange}
-            autoComplete="name"
-            required
-          />
+      <form onSubmit={handleSubmit} className="retro-form">
+        <div className="retro-form-group">
+          <label htmlFor="reg-name">FULL NAME</label>
+          <div className="input-frame">
+            <input
+              id="reg-name"
+              name="name"
+              type="text"
+              className="retro-input"
+              placeholder="e.g. Neil Armstrong"
+              value={formData.name}
+              onChange={handleChange}
+              autoComplete="name"
+              required
+            />
+          </div>
         </div>
 
-        <div className="form-group">
-          <label className="form-label" htmlFor="nickname">Pilot Nickname</label>
-          <input
-            id="nickname"
-            name="nickname"
-            type="text"
-            className="retro-input"
-            placeholder="e.g. StarVoyager"
-            value={formData.nickname}
-            onChange={handleChange}
-            required
-          />
+        <div className="retro-form-group">
+          <label htmlFor="reg-nickname">PILOT NICKNAME / CALLSIGN</label>
+          <div className="input-frame">
+            <input
+              id="reg-nickname"
+              name="nickname"
+              type="text"
+              className="retro-input"
+              placeholder="e.g. StarVoyager"
+              value={formData.nickname}
+              onChange={handleChange}
+              required
+            />
+          </div>
         </div>
 
-        <div className="form-group">
-          <label className="form-label" htmlFor="email">Comms Email</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            className="retro-input"
-            placeholder="pilot@spacefuel.station"
-            value={formData.email}
-            onChange={handleChange}
-            autoComplete="email"
-            required
-          />
+        <div className="retro-form-group">
+          <label htmlFor="reg-email">COMMUNICATION EMAIL</label>
+          <div className="input-frame">
+            <input
+              id="reg-email"
+              name="email"
+              type="email"
+              className="retro-input"
+              placeholder="pilot@spacefuel.io"
+              value={formData.email}
+              onChange={handleChange}
+              autoComplete="email"
+              required
+            />
+          </div>
         </div>
 
-        <div className="form-group">
-          <label className="form-label" htmlFor="password">Security Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            className="retro-input"
-            placeholder="Min 6 characters"
-            value={formData.password}
-            onChange={handleChange}
-            autoComplete="new-password"
-            required
-          />
+        <div className="form-row-2">
+          <div className="retro-form-group">
+            <label htmlFor="reg-password">PASSWORD</label>
+            <div className="input-frame">
+              <input
+                id="reg-password"
+                name="password"
+                type="password"
+                className="retro-input"
+                placeholder="Min 6 chars"
+                value={formData.password}
+                onChange={handleChange}
+                autoComplete="new-password"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="retro-form-group">
+            <label htmlFor="reg-confirm">CONFIRM KEY</label>
+            <div className="input-frame">
+              <input
+                id="reg-confirm"
+                name="confirmPassword"
+                type="password"
+                className="retro-input"
+                placeholder="Re-enter"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                autoComplete="new-password"
+                required
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="form-group">
-          <label className="form-label" htmlFor="confirmPassword">Verify Password</label>
-          <input
-            id="confirmPassword"
-            name="confirmPassword"
-            type="password"
-            className="retro-input"
-            placeholder="Repeat password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            autoComplete="new-password"
-            required
-          />
-        </div>
-
-        <button type="submit" className="retro-btn" disabled={loading}>
-          {loading ? 'REGISTERING...' : 'REGISTER IDENTITY'}
+        <button type="submit" className="retro-btn btn-coral btn-block" disabled={loading}>
+          {loading ? 'ENROLLING IDENTITY...' : '▶ REGISTER PILOT'}
         </button>
       </form>
 
-      <div className="card-footer">
-        Already an authorized pilot?
-        <button type="button" className="card-link" onClick={onSwitchToLogin}>
-          Log In Here
+      <div className="auth-footer-prompt">
+        <span>ALREADY HAVE CREDENTIALS?</span>
+        <button type="button" className="inline-link" onClick={onSwitchToLogin}>
+          [ RETURN TO LOGIN ]
         </button>
       </div>
     </div>

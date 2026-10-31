@@ -1,93 +1,123 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-export default function Navbar({ activeView, setActiveView, user, onLogout }) {
+export default function Navbar({ activeView, onNavigate, user, onLogout }) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleNavClick = (view) => {
+    onNavigate(view);
+    setMobileMenuOpen(false);
+  };
+
   return (
-    <header className="retro-navbar">
-      <div className="nav-container">
-        {/* Left navigation links */}
-        <nav className="nav-group nav-left">
+    <nav className="retro-navbar">
+      <div className="navbar-container">
+        {/* Left Navigation Links */}
+        <div className={`nav-group nav-left ${mobileMenuOpen ? 'mobile-show' : ''}`}>
           <button
             type="button"
-            className={`nav-item ${activeView === 'home' ? 'active' : ''}`}
-            onClick={() => setActiveView('home')}
+            className={`nav-link-btn ${activeView === 'home' ? 'active' : ''}`}
+            onClick={() => handleNavClick('home')}
           >
             Home
           </button>
           <button
             type="button"
-            className={`nav-item ${activeView === 'about' ? 'active' : ''}`}
-            onClick={() => setActiveView('about')}
+            className={`nav-link-btn ${activeView === 'about' ? 'active' : ''}`}
+            onClick={() => handleNavClick('about')}
           >
             About
           </button>
           <button
             type="button"
-            className={`nav-item ${activeView === 'games' ? 'active' : ''}`}
-            onClick={() => setActiveView('games')}
+            className={`nav-link-btn ${activeView === 'games' ? 'active' : ''}`}
+            onClick={() => handleNavClick('games')}
           >
             Games
           </button>
-        </nav>
-
-        {/* Center retro emblem */}
-        <div className="nav-center-emblem" onClick={() => setActiveView('home')}>
-          <div className="emblem-ribbon">
-            <span className="emblem-dot">▪</span>
-            <span className="emblem-text">SPACE</span>
-            <span className="emblem-dot">▪</span>
-          </div>
         </div>
 
-        {/* Right navigation links */}
-        <nav className="nav-group nav-right">
+        {/* Center Logo Banner */}
+        <div
+          className="nav-center-banner"
+          onClick={() => handleNavClick('home')}
+          role="button"
+          tabIndex={0}
+          title="Return to Home"
+        >
+          <div className="ribbon-wing wing-left"></div>
+          <div className="ribbon-body">
+            <span className="banner-dot">•</span>
+            <span className="banner-title">SPACE</span>
+            <span className="banner-dot">•</span>
+          </div>
+          <div className="ribbon-wing wing-right"></div>
+        </div>
+
+        {/* Right Navigation Links */}
+        <div className={`nav-group nav-right ${mobileMenuOpen ? 'mobile-show' : ''}`}>
           <button
             type="button"
-            className={`nav-item ${activeView === 'pricing' ? 'active' : ''}`}
-            onClick={() => setActiveView('pricing')}
+            className={`nav-link-btn ${activeView === 'pricing' ? 'active' : ''}`}
+            onClick={() => handleNavClick('pricing')}
           >
             Pricing
           </button>
           <button
             type="button"
-            className={`nav-item ${activeView === 'faqs' ? 'active' : ''}`}
-            onClick={() => setActiveView('faqs')}
+            className={`nav-link-btn ${activeView === 'faqs' ? 'active' : ''}`}
+            onClick={() => handleNavClick('faqs')}
           >
             FAQs
           </button>
 
           {user ? (
-            <div className="nav-user-pill">
-              <span className="user-indicator">● {user.nickname || 'Pilot'}</span>
+            <div className="user-nav-profile">
               <button
                 type="button"
-                className="nav-logout-btn"
-                onClick={onLogout}
-                title="Log out"
+                className={`nav-link-btn user-pilot-badge ${activeView === 'welcome' ? 'active' : ''}`}
+                onClick={() => handleNavClick('welcome')}
+                title="View Pilot Dashboard"
               >
-                Exit
+                👨‍🚀 {user.nickname || user.name}
+              </button>
+              <button
+                type="button"
+                className="nav-link-btn nav-logout-btn"
+                onClick={onLogout}
+              >
+                Logout
               </button>
             </div>
           ) : (
-            <div className="nav-auth-buttons">
+            <div className="auth-nav-buttons">
               <button
                 type="button"
-                className={`nav-item nav-login-btn ${activeView === 'login' ? 'active' : ''}`}
-                onClick={() => setActiveView('login')}
+                className={`nav-link-btn nav-login-btn ${activeView === 'login' ? 'active' : ''}`}
+                onClick={() => handleNavClick('login')}
               >
                 Login
               </button>
               <button
                 type="button"
-                className={`nav-item nav-register-btn ${activeView === 'register' ? 'active' : ''}`}
-                onClick={() => setActiveView('register')}
+                className={`nav-link-btn nav-register-btn ${activeView === 'register' ? 'active' : ''}`}
+                onClick={() => handleNavClick('register')}
               >
                 Register
               </button>
             </div>
           )}
-        </nav>
+        </div>
+
+        {/* Mobile Hamburger Button */}
+        <button
+          type="button"
+          className="mobile-toggle-btn"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle navigation menu"
+        >
+          {mobileMenuOpen ? '✕' : '☰'}
+        </button>
       </div>
-    </header>
+    </nav>
   );
 }
-
