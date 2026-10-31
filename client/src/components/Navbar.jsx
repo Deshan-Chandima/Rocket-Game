@@ -90,3 +90,4 @@ export default function Navbar({ activeView, setActiveView, user, onLogout }) {
     </header>
   );
 }
+
