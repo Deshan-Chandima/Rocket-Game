@@ -64,3 +64,4 @@ export default function ComingSoon({ pageName, onNavigate, user }) {
     </div>
   );
 }
+
