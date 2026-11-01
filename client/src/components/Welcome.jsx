@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Welcome({ user, onLogout }) {
+export default function Welcome({ user, token, onLogout }) {
   const nickname = user?.nickname || 'Pilot';
 
   return (
@@ -14,7 +14,7 @@ export default function Welcome({ user, onLogout }) {
 
       <div className="welcome-console-header">
         <div className="status-badge-retro">
-          <span className="blinking-cursor">■</span> TELEMETRY ACTIVE
+          <span className="blinking-cursor">■</span> TELEMETRY ACTIVE &bull; JWT VERIFIED
         </div>
 
         {/* Required User Welcome Message */}
@@ -42,10 +42,17 @@ export default function Welcome({ user, onLogout }) {
         </div>
 
         <div className="telemetry-card">
-          <span className="tel-label">THRUSTER STATUS</span>
-          <span className="tel-value tel-success">● PLASMA READY [100%]</span>
+          <span className="tel-label">IDENTITY SECURITY</span>
+          <span className="tel-value tel-success">🔒 JWT SIGNED &bull; HMAC-SHA256</span>
         </div>
       </div>
+
+      {token && (
+        <div className="jwt-token-display">
+          <span className="jwt-label">PILOT SECURITY TOKEN (BEARER):</span>
+          <code className="jwt-code">{token.slice(0, 32)}...{token.slice(-16)}</code>
+        </div>
+      )}
 
       <div className="console-actions">
         <button

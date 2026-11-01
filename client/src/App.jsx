@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar.jsx';
 import Login from './components/Login.jsx';
 import Register from './components/Register.jsx';
@@ -6,17 +6,47 @@ import Welcome from './components/Welcome.jsx';
 import ComingSoon from './components/ComingSoon.jsx';
 
 export default function App() {
-  // Default to 'login' so authentication pages are front and center
   const [activeView, setActiveView] = useState('login'); // 'login' | 'register' | 'welcome' | 'home' | 'about' | 'games'
   const [currentUser, setCurrentUser] = useState(null);
+  const [token, setToken] = useState(() => localStorage.getItem('spacefuel_token') || null);
 
-  const handleLoginSuccess = (userData) => {
+  // Automatically verify saved JWT on initial load
+  useEffect(() => {
+    const savedToken = localStorage.getItem('spacefuel_token');
+    if (savedToken) {
+      fetch('http://localhost:5000/api/verify-token', {
+        headers: {
+          'Authorization': `Bearer ${savedToken}`
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.user) {
+          setCurrentUser(data.user);
+          setToken(savedToken);
+          setActiveView('welcome');
+        } else {
+          // Token is invalid, expired, or tampered with
+          localStorage.removeItem('spacefuel_token');
+          setToken(null);
+        }
+      })
+      .catch(() => {
+        // Fallback if backend server is not running
+      });
+    }
+  }, []);
+
+  const handleLoginSuccess = (userData, userToken) => {
     setCurrentUser(userData);
+    if (userToken) setToken(userToken);
     setActiveView('welcome');
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('spacefuel_token');
     setCurrentUser(null);
+    setToken(null);
     setActiveView('login');
   };
 
@@ -63,10 +93,11 @@ export default function App() {
           />
         )}
 
-        {/* Active Page: Welcome (Post-Login) */}
+        {/* Active Page: Welcome (Post-Login with verified JWT) */}
         {activeView === 'welcome' && (
           <Welcome
             user={currentUser}
+            token={token}
             onLogout={handleLogout}
           />
         )}

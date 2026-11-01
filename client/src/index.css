@@ -921,6 +921,31 @@ html, body {
   flex-wrap: wrap;
 }
 
+.jwt-token-display {
+  background: rgba(9, 14, 22, 0.85);
+  border: 1px dashed rgba(142, 197, 194, 0.4);
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.jwt-label {
+  display: block;
+  font-family: var(--font-arcade);
+  font-size: 0.72rem;
+  color: var(--teal-accent);
+  letter-spacing: 1px;
+  margin-bottom: 0.35rem;
+}
+
+.jwt-code {
+  font-family: monospace;
+  font-size: 0.78rem;
+  color: var(--coral-accent);
+  word-break: break-all;
+}
+
 /* ==========================================================================
    10. SCENERY BACKDROP (ROBOT, GANTRY, LANTERNS)
    ========================================================================== */

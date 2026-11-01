@@ -50,8 +50,12 @@ export default function Login({ onLoginSuccess, onSwitchToRegister }) {
         throw new Error(data.message || 'INVALID LOGIN CREDENTIALS.');
       }
 
+      if (data.token) {
+        localStorage.setItem('spacefuel_token', data.token);
+      }
+
       if (data.user) {
-        onLoginSuccess(data.user);
+        onLoginSuccess(data.user, data.token);
       } else {
         throw new Error('PILOT DATA MISSING IN SERVER TELEMETRY.');
       }
