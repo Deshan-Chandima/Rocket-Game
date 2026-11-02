@@ -21,7 +21,7 @@ export default function Register({ onSwitchToLogin }) {
       [e.target.name]: e.target.value
     });
     if (error) setError('');
-  };
+  };  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -108,36 +108,38 @@ export default function Register({ onSwitchToLogin }) {
       )}
 
       <form onSubmit={handleSubmit} className="retro-form">
-        <div className="retro-form-group">
-          <label htmlFor="reg-name">FULL NAME</label>
-          <div className="input-frame">
-            <input
-              id="reg-name"
-              name="name"
-              type="text"
-              className="retro-input"
-              placeholder="e.g. Neil Armstrong"
-              value={formData.name}
-              onChange={handleChange}
-              autoComplete="name"
-              required
-            />
+        <div className="form-row-2">
+          <div className="retro-form-group">
+            <label htmlFor="reg-name">FULL NAME</label>
+            <div className="input-frame">
+              <input
+                id="reg-name"
+                name="name"
+                type="text"
+                className="retro-input"
+                placeholder="e.g. Neil Armstrong"
+                value={formData.name}
+                onChange={handleChange}
+                autoComplete="name"
+                required
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="retro-form-group">
-          <label htmlFor="reg-nickname">PILOT NICKNAME / CALLSIGN</label>
-          <div className="input-frame">
-            <input
-              id="reg-nickname"
-              name="nickname"
-              type="text"
-              className="retro-input"
-              placeholder="e.g. StarVoyager"
-              value={formData.nickname}
-              onChange={handleChange}
-              required
-            />
+          <div className="retro-form-group">
+            <label htmlFor="reg-nickname">PILOT NICKNAME / CALLSIGN</label>
+            <div className="input-frame">
+              <input
+                id="reg-nickname"
+                name="nickname"
+                type="text"
+                className="retro-input"
+                placeholder="e.g. StarVoyager"
+                value={formData.nickname}
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
         </div>
 
