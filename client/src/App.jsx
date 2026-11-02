@@ -65,14 +65,14 @@ export default function App() {
         onLogout={handleLogout}
       />
 
-      {/* 2. Main Hero Banner matching .SPACE. CENTEE reference */}
+      {/* 2. Main Hero Banner */}
       <header className="hero-banner">
         <div className="hero-title-wrapper">
           <span className="pixel-box-accent"></span>
-          <h1 className="hero-pixel-title">SPACE</h1>
+          <h1 className="hero-pixel-title">SPACE FUEL</h1>
           <span className="pixel-box-accent"></span>
         </div>
-        <p className="hero-subtitle">CENTEE</p>
+        <p className="hero-subtitle">MISSION CONTROL &bull; ROCKET ODYSSEY</p>
         <div className="hero-divider"></div>
       </header>
 

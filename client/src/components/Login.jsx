@@ -72,7 +72,7 @@ export default function Login({ onLoginSuccess, onSwitchToRegister }) {
         <span className="terminal-dot red"></span>
         <span className="terminal-dot yellow"></span>
         <span className="terminal-dot green"></span>
-        <span className="terminal-title">AUTH_GATEWAY // PORT_5000</span>
+        <span className="terminal-title">SPACE_FUEL // PILOT_TERMINAL</span>
       </div>
 
       <div className="auth-header">
