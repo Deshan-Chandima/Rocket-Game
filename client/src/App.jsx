@@ -1,44 +1,167 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Navbar from './components/Navbar.jsx';
 import Login from './components/Login.jsx';
 import Register from './components/Register.jsx';
 import Welcome from './components/Welcome.jsx';
+import ComingSoon from './components/ComingSoon.jsx';
 
 export default function App() {
-  const [view, setView] = useState('login'); // 'login' | 'register' | 'welcome'
+  const [activeView, setActiveView] = useState('login'); // 'login' | 'register' | 'welcome' | 'home' | 'about' | 'games'
   const [currentUser, setCurrentUser] = useState(null);
+  const [token, setToken] = useState(() => localStorage.getItem('spacefuel_token') || null);
 
-  const handleLoginSuccess = (userData) => {
+  // Automatically verify saved JWT on initial load
+  useEffect(() => {
+    const savedToken = localStorage.getItem('spacefuel_token');
+    if (savedToken) {
+      fetch('http://localhost:5000/api/verify-token', {
+        headers: {
+          'Authorization': `Bearer ${savedToken}`
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.user) {
+          setCurrentUser(data.user);
+          setToken(savedToken);
+          setActiveView('welcome');
+        } else {
+          // Token is invalid, expired, or tampered with
+          localStorage.removeItem('spacefuel_token');
+          setToken(null);
+        }
+      })
+      .catch(() => {
+        // Fallback if backend server is not running
+      });
+    }
+  }, []);
+
+  const handleLoginSuccess = (userData, userToken) => {
     setCurrentUser(userData);
-    setView('welcome');
+    if (userToken) setToken(userToken);
+    setActiveView('welcome');
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('spacefuel_token');
     setCurrentUser(null);
-    setView('login');
+    setToken(null);
+    setActiveView('login');
+  };
+
+  const handleNavigate = (view) => {
+    setActiveView(view);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <main>
-      {view === 'login' && (
-        <Login
-          onLoginSuccess={handleLoginSuccess}
-          onSwitchToRegister={() => setView('register')}
-        />
-      )}
+    <div className="space-arcade-universe">
+      {/* 1. Top Retro Navbar (.SPACE.) */}
+      <Navbar
+        activeView={activeView}
+        onNavigate={handleNavigate}
+        user={currentUser}
+        onLogout={handleLogout}
+      />
 
-      {view === 'register' && (
-        <Register
-          onSwitchToLogin={() => setView('login')}
-        />
-      )}
+      {/* 2. Main Hero Banner matching .SPACE. CENTEE reference */}
+      <header className="hero-banner">
+        <div className="hero-title-wrapper">
+          <span className="pixel-box-accent"></span>
+          <h1 className="hero-pixel-title">SPACE</h1>
+          <span className="pixel-box-accent"></span>
+        </div>
+        <p className="hero-subtitle">CENTEE</p>
+        <div className="hero-divider"></div>
+      </header>
 
-      {view === 'welcome' && (
-        <Welcome
-          user={currentUser}
-          onLogout={handleLogout}
-        />
-      )}
-    </main>
+      {/* 3. Main Stage Content */}
+      <main className="content-stage">
+        {/* Active Page: Login */}
+        {activeView === 'login' && (
+          <Login
+            onLoginSuccess={handleLoginSuccess}
+            onSwitchToRegister={() => setActiveView('register')}
+          />
+        )}
+
+        {/* Active Page: Register */}
+        {activeView === 'register' && (
+          <Register
+            onSwitchToLogin={() => setActiveView('login')}
+          />
+        )}
+
+        {/* Active Page: Welcome (Post-Login with verified JWT) */}
+        {activeView === 'welcome' && (
+          <Welcome
+            user={currentUser}
+            token={token}
+            onLogout={handleLogout}
+          />
+        )}
+
+        {/* Other Pages: Home, About, Games (Say "Coming Soon") */}
+        {['home', 'about', 'games'].includes(activeView) && (
+          <ComingSoon
+            pageName={activeView}
+            onNavigate={handleNavigate}
+            user={currentUser}
+          />
+        )}
+      </main>
+
+      {/* 4. Atmospheric Retro Space Scene Artwork (Robot, Staircases, Hanging Lanterns) */}
+      <div className="station-backdrop-scenery" aria-hidden="true">
+        {/* Left Gantry & Stairway Structure */}
+        <div className="scenery-gantry gantry-left">
+          <div className="stairs-step s1"></div>
+          <div className="stairs-step s2"></div>
+          <div className="stairs-step s3"></div>
+          <div className="gantry-railing"></div>
+          <div className="gantry-lamp globe-lamp-1"></div>
+        </div>
+
+        {/* Floating Pods & Suspended Lamps */}
+        <div className="floating-pod pod-left">
+          <div className="pod-window"></div>
+        </div>
+        <div className="suspended-lamp lamp-center-left"></div>
+        <div className="suspended-lamp lamp-center-right"></div>
+
+        {/* Center Station Robot Sentinel */}
+        <div className="station-robot">
+          <div className="robot-antenna"></div>
+          <div className="robot-head">
+            <div className="robot-eye"></div>
+          </div>
+          <div className="robot-torso">
+            <div className="robot-plating"></div>
+          </div>
+        </div>
+
+        {/* Right Observation Deck & Stairs */}
+        <div className="scenery-gantry gantry-right">
+          <div className="gantry-deck">
+            <div className="deck-terminal"></div>
+          </div>
+          <div className="stairs-step r1"></div>
+          <div className="stairs-step r2"></div>
+          <div className="gantry-lamp globe-lamp-2"></div>
+        </div>
+
+        {/* Pixel Stardust Particles */}
+        <div className="star-layer stars-1"></div>
+        <div className="star-layer stars-2"></div>
+      </div>
+
+      {/* Footer Info */}
+      <footer className="retro-footer">
+        <p className="footer-credits">
+          [ SPACE FUEL &bull; MISSION CONTROL TERMINAL &bull; V2.0 ]
+        </p>
+      </footer>
+    </div>
   );
 }
-

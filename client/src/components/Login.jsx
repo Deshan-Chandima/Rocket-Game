@@ -26,7 +26,7 @@ export default function Login({ onLoginSuccess, onSwitchToRegister }) {
     const { email, password } = formData;
 
     if (!email || !password) {
-      setError('Please provide both email and password.');
+      setError('PLEASE PROVIDE BOTH EMAIL AND PASSWORD.');
       return;
     }
 
@@ -47,75 +47,92 @@ export default function Login({ onLoginSuccess, onSwitchToRegister }) {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Invalid login credentials.');
+        throw new Error(data.message || 'INVALID LOGIN CREDENTIALS.');
       }
 
-      // Login successful: pass user object to parent
+      if (data.token) {
+        localStorage.setItem('spacefuel_token', data.token);
+      }
+
       if (data.user) {
-        onLoginSuccess(data.user);
+        onLoginSuccess(data.user, data.token);
       } else {
-        throw new Error('User data missing in server response.');
+        throw new Error('PILOT DATA MISSING IN SERVER TELEMETRY.');
       }
     } catch (err) {
-      setError(err.message || 'Failed to connect to the server.');
+      setError(err.message || 'FAILED TO CONNECT TO SPACE CENTER HOST.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="brand-header">
-        <span className="brand-icon">🚀</span>
-        <h1 className="brand-title">SPACE FUEL</h1>
-        <p className="brand-subtitle">Access your virtual pilot terminal</p>
+    <div className="retro-auth-card">
+      <div className="card-terminal-bar">
+        <span className="terminal-dot red"></span>
+        <span className="terminal-dot yellow"></span>
+        <span className="terminal-dot green"></span>
+        <span className="terminal-title">AUTH_GATEWAY // PORT_5000</span>
       </div>
 
-      {error && <div className="alert alert-error">{error}</div>}
+      <div className="auth-header">
+        <h2 className="auth-pixel-title">PILOT LOGIN</h2>
+        <p className="auth-pixel-subtitle">AUTHENTICATE TO ACCESS MISSION TERMINAL</p>
+      </div>
 
-      <form onSubmit={handleSubmit} className="auth-form">
-        <div className="form-group">
-          <label htmlFor="email">Email Address</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            className="form-control"
-            placeholder="pilot@spacefuel.io"
-            value={formData.email}
-            onChange={handleChange}
-            autoComplete="email"
-            required
-          />
+      {error && (
+        <div className="retro-alert alert-error">
+          <span className="alert-icon">⚠️</span>
+          <span>{error}</span>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="retro-form">
+        <div className="retro-form-group">
+          <label htmlFor="login-email">CREW EMAIL</label>
+          <div className="input-frame">
+            <input
+              id="login-email"
+              name="email"
+              type="email"
+              className="retro-input"
+              placeholder="pilot@spacefuel.io"
+              value={formData.email}
+              onChange={handleChange}
+              autoComplete="email"
+              required
+            />
+          </div>
         </div>
 
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            className="form-control"
-            placeholder="Enter your password"
-            value={formData.password}
-            onChange={handleChange}
-            autoComplete="current-password"
-            required
-          />
+        <div className="retro-form-group">
+          <label htmlFor="login-password">ACCESS KEY (PASSWORD)</label>
+          <div className="input-frame">
+            <input
+              id="login-password"
+              name="password"
+              type="password"
+              className="retro-input"
+              placeholder="••••••••••••"
+              value={formData.password}
+              onChange={handleChange}
+              autoComplete="current-password"
+              required
+            />
+          </div>
         </div>
 
-        <button type="submit" className="auth-btn" disabled={loading}>
-          {loading ? 'Authenticating...' : 'Launch Session (Login)'}
+        <button type="submit" className="retro-btn btn-coral btn-block" disabled={loading}>
+          {loading ? 'AUTHENTICATING...' : '▶ LAUNCH SESSION'}
         </button>
       </form>
 
-      <div className="auth-footer">
-        Don't have a pilot identity yet?
-        <button type="button" className="auth-link" onClick={onSwitchToRegister}>
-          Register Here
+      <div className="auth-footer-prompt">
+        <span>NEW PILOT CADET?</span>
+        <button type="button" className="inline-link" onClick={onSwitchToRegister}>
+          [ CREATE VIRTUAL IDENTITY ]
         </button>
       </div>
     </div>
   );
 }
-

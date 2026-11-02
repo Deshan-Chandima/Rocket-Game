@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 let bcrypt;
 try {
   bcrypt = require('bcrypt');
@@ -12,6 +13,7 @@ const db = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const JWT_SECRET = process.env.JWT_SECRET || 'spacefuel_super_secret_jwt_key_2026_pilot_auth';
 
 // Middleware
 app.use(cors());
@@ -21,7 +23,8 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.json({
     status: 'online',
-    message: '🚀 Space Fuel Authentication Server is running on port ' + PORT
+    message: '🚀 Space Fuel Authentication Server is running on port ' + PORT,
+    jwtSecurity: 'Active'
   });
 });
 
@@ -98,6 +101,7 @@ app.post('/api/register', async (req, res) => {
 /**
  * POST /api/login
  * Request body: { email, password }
+ * Authenticates user and issues a cryptographically signed JWT Token
  */
 app.post('/api/login', async (req, res) => {
   try {
@@ -137,10 +141,23 @@ app.post('/api/login', async (req, res) => {
       });
     }
 
-    // Return success response with user profile data (excluding password)
+    // Generate cryptographic JWT Token for Virtual Identity verification
+    const token = jwt.sign(
+      {
+        id: user.id,
+        name: user.name,
+        nickname: user.nickname,
+        email: user.email
+      },
+      JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    // Return success response with signed JWT and sanitized user profile
     return res.status(200).json({
       success: true,
       message: 'Login successful',
+      token,
       user: {
         id: user.id,
         name: user.name,
@@ -158,9 +175,53 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+/**
+ * GET /api/verify-token
+ * Authenticates the JWT token from the Authorization header to verify
+ * whether the genuine authorized pilot is accessing the system.
+ */
+app.get('/api/verify-token', (req, res) => {
+  try {
+    const authHeader = req.headers['authorization'];
+
+    if (!authHeader) {
+      return res.status(401).json({
+        success: false,
+        message: 'No authorization token provided.'
+      });
+    }
+
+    // Format: "Bearer <token>"
+    const token = authHeader.startsWith('Bearer ')
+      ? authHeader.slice(7)
+      : authHeader;
+
+    // Verify signature with JWT_SECRET
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Token verified! Pilot identity authenticated.',
+      user: {
+        id: decoded.id,
+        name: decoded.name,
+        nickname: decoded.nickname,
+        email: decoded.email
+      }
+    });
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: 'Invalid, tampered, or expired token.',
+      error: error.message
+    });
+  }
+});
+
 // Start Express server
 app.listen(PORT, () => {
   console.log(`🚀 Space Fuel Server listening on port ${PORT}`);
-  console.log(`   - Register: http://localhost:${PORT}/api/register`);
-  console.log(`   - Login:    http://localhost:${PORT}/api/login`);
+  console.log(`   - Register:     POST http://localhost:${PORT}/api/register`);
+  console.log(`   - Login:        POST http://localhost:${PORT}/api/login`);
+  console.log(`   - Verify Token: GET  http://localhost:${PORT}/api/verify-token`);
 });
