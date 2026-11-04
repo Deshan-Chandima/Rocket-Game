@@ -505,6 +505,282 @@ html, body {
 }
 
 /* ==========================================================================
+   4.5. HOME ARCADE GAME MENU (PLAY, LEVEL, LEADERBOARD, QUIT)
+   ========================================================================== */
+.retro-auth-card.home-terminal-card {
+  max-width: 560px;
+  padding: 1.5rem 2rem;
+}
+
+.game-menu-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.game-menu-header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.game-menu-title {
+  font-family: var(--font-pixel);
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  letter-spacing: 2px;
+  color: var(--text-white);
+  margin-bottom: 0.35rem;
+  text-shadow: 2px 2px 0px #000;
+}
+
+.game-menu-subtitle {
+  font-family: var(--font-arcade);
+  font-size: 0.74rem;
+  color: var(--coral-accent);
+  letter-spacing: 1px;
+}
+
+.game-menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto 1.15rem auto;
+}
+
+.menu-option-btn {
+  padding: 0.85rem 1.4rem;
+  font-size: 0.92rem;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  border-radius: 6px;
+  width: 100%;
+}
+
+.menu-option-btn .btn-icon {
+  font-size: 1rem;
+}
+
+.btn-quit {
+  background: rgba(239, 68, 68, 0.15);
+  border: 2px solid rgba(239, 68, 68, 0.5);
+  color: #fca5a5;
+}
+
+.btn-quit:hover {
+  background: rgba(239, 68, 68, 0.3);
+  color: #ffffff;
+  border-color: #ef4444;
+}
+
+.btn-quit-confirm {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.game-menu-footer {
+  font-family: var(--font-arcade);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+/* Modals for Level & Leaderboard inside Home Card */
+.modal-inner-view {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  text-align: left;
+  width: 100%;
+}
+
+.modal-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(245, 151, 121, 0.25);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.modal-title {
+  font-family: var(--font-pixel);
+  font-size: 1.05rem;
+  color: var(--text-white);
+  letter-spacing: 1px;
+}
+
+.modal-badge {
+  font-family: var(--font-arcade);
+  font-size: 0.72rem;
+  color: var(--teal-accent);
+  background: rgba(142, 197, 194, 0.15);
+  border: 1px solid var(--teal-accent);
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+}
+
+.level-status-box {
+  background: rgba(9, 14, 22, 0.85);
+  border: 1px solid rgba(245, 151, 121, 0.3);
+  border-radius: 6px;
+  padding: 0.95rem 1.15rem;
+}
+
+.level-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px dashed rgba(245, 151, 121, 0.2);
+  padding-bottom: 0.45rem;
+}
+
+.level-number {
+  font-family: var(--font-pixel);
+  color: var(--coral-accent);
+  font-size: 0.85rem;
+}
+
+.level-name {
+  font-family: var(--font-arcade);
+  color: var(--text-white);
+  font-size: 0.78rem;
+}
+
+.level-details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 0.85rem;
+}
+
+.level-detail-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+}
+
+.lvl-label {
+  font-family: var(--font-arcade);
+  color: var(--text-dim);
+  font-size: 0.7rem;
+}
+
+.lvl-val {
+  color: var(--text-cream);
+  text-align: right;
+  max-width: 65%;
+}
+
+.level-progress-bar-wrap {
+  margin-top: 0.5rem;
+}
+
+.progress-label {
+  font-family: var(--font-arcade);
+  font-size: 0.68rem;
+  color: var(--teal-accent);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.progress-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal-accent), var(--coral-accent));
+}
+
+.modal-actions-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.85rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.leaderboard-table-wrap {
+  background: rgba(9, 14, 22, 0.85);
+  border: 1px solid rgba(245, 151, 121, 0.25);
+  border-radius: 6px;
+  padding: 0.5rem;
+  overflow-x: auto;
+}
+
+.retro-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.retro-table th {
+  font-family: var(--font-arcade);
+  font-size: 0.7rem;
+  color: var(--teal-accent);
+  text-align: left;
+  padding: 0.5rem;
+  border-bottom: 1px solid rgba(142, 197, 194, 0.3);
+}
+
+.retro-table td {
+  padding: 0.45rem 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.rank-cell {
+  font-family: var(--font-pixel);
+  color: var(--coral-accent);
+  font-size: 0.75rem;
+}
+
+.callsign-cell {
+  font-weight: 600;
+  color: var(--text-white);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.you-pill {
+  font-family: var(--font-arcade);
+  font-size: 0.62rem;
+  background: var(--amber-lamp);
+  color: #0c121b;
+  padding: 0.05rem 0.35rem;
+  border-radius: 2px;
+  font-weight: 700;
+}
+
+.score-cell {
+  font-family: monospace;
+  color: var(--amber-lamp);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.current-pilot-row {
+  background: rgba(245, 151, 121, 0.12);
+}
+
+.quit-warning-text {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0.5rem 0 0.85rem 0;
+}
+
+/* ==========================================================================
    5. WELCOME CONSOLE HUD
    ========================================================================== */
 .welcome-console-header {
@@ -987,7 +1263,7 @@ html, body {
     display: block;
   }
 
-  .form-row-2, .telemetry-grid {
+  .form-row-2, .telemetry-grid, .home-features-grid {
     grid-template-columns: 1fr;
   }
 

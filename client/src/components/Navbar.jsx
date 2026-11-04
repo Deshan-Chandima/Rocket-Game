@@ -39,7 +39,7 @@ export default function Navbar({ activeView, onNavigate, user, onLogout }) {
         {/* Center Logo Banner */}
         <div
           className="nav-center-banner"
-          onClick={() => handleNavClick('login')}
+          onClick={() => handleNavClick('home')}
           role="button"
           tabIndex={0}
           title="Space Fuel Mission Control"
