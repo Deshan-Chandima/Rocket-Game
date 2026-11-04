@@ -39,15 +39,15 @@ export default function Navbar({ activeView, onNavigate, user, onLogout }) {
         {/* Center Logo Banner */}
         <div
           className="nav-center-banner"
-          onClick={() => handleNavClick('login')}
+          onClick={() => handleNavClick('home')}
           role="button"
           tabIndex={0}
-          title="Space Center"
+          title="Space Fuel Mission Control"
         >
           <div className="ribbon-wing wing-left"></div>
           <div className="ribbon-body">
             <span className="banner-dot">•</span>
-            <span className="banner-title">SPACE</span>
+            <span className="banner-title">SPACE FUEL</span>
             <span className="banner-dot">•</span>
           </div>
           <div className="ribbon-wing wing-right"></div>

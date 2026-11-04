@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar.jsx';
+import Home from './components/Home.jsx';
 import Login from './components/Login.jsx';
 import Register from './components/Register.jsx';
 import Welcome from './components/Welcome.jsx';
 import ComingSoon from './components/ComingSoon.jsx';
 
 export default function App() {
-  const [activeView, setActiveView] = useState('login'); // 'login' | 'register' | 'welcome' | 'home' | 'about' | 'games'
+  const [activeView, setActiveView] = useState('home'); // 'home' | 'login' | 'register' | 'welcome' | 'about' | 'games'
   const [currentUser, setCurrentUser] = useState(null);
   const [token, setToken] = useState(() => localStorage.getItem('spacefuel_token') || null);
 
@@ -65,19 +66,27 @@ export default function App() {
         onLogout={handleLogout}
       />
 
-      {/* 2. Main Hero Banner matching .SPACE. CENTEE reference */}
+      {/* 2. Main Hero Banner */}
       <header className="hero-banner">
         <div className="hero-title-wrapper">
           <span className="pixel-box-accent"></span>
-          <h1 className="hero-pixel-title">SPACE</h1>
+          <h1 className="hero-pixel-title">SPACE FUEL</h1>
           <span className="pixel-box-accent"></span>
         </div>
-        <p className="hero-subtitle">CENTEE</p>
+        <p className="hero-subtitle">MISSION CONTROL &bull; ROCKET ODYSSEY</p>
         <div className="hero-divider"></div>
       </header>
 
       {/* 3. Main Stage Content */}
       <main className="content-stage">
+        {/* Active Page: Home (Mission Control Launch Deck) */}
+        {activeView === 'home' && (
+          <Home
+            onNavigate={handleNavigate}
+            user={currentUser}
+          />
+        )}
+
         {/* Active Page: Login */}
         {activeView === 'login' && (
           <Login
@@ -102,8 +111,8 @@ export default function App() {
           />
         )}
 
-        {/* Other Pages: Home, About, Games (Say "Coming Soon") */}
-        {['home', 'about', 'games'].includes(activeView) && (
+        {/* Other Pages: About, Games (Say "Coming Soon") */}
+        {['about', 'games'].includes(activeView) && (
           <ComingSoon
             pageName={activeView}
             onNavigate={handleNavigate}
