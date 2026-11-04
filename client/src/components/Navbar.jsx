@@ -11,7 +11,7 @@ export default function Navbar({ activeView, onNavigate, user, onLogout }) {
   return (
     <nav className="retro-navbar">
       <div className="navbar-container">
-        {/* Left Navigation Links: Home, About, Games */}
+        {/* Left Navigation Links: Home */}
         <div className={`nav-group nav-left ${mobileMenuOpen ? 'mobile-show' : ''}`}>
           <button
             type="button"
@@ -19,20 +19,6 @@ export default function Navbar({ activeView, onNavigate, user, onLogout }) {
             onClick={() => handleNavClick('home')}
           >
             Home
-          </button>
-          <button
-            type="button"
-            className={`nav-link-btn ${activeView === 'about' ? 'active' : ''}`}
-            onClick={() => handleNavClick('about')}
-          >
-            About
-          </button>
-          <button
-            type="button"
-            className={`nav-link-btn ${activeView === 'games' ? 'active' : ''}`}
-            onClick={() => handleNavClick('games')}
-          >
-            Games
           </button>
         </div>
 
