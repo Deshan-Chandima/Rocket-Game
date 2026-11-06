@@ -44,11 +44,24 @@ export default function App() {
     setActiveView('welcome');
   };
 
+  const handlePlayAsGuest = () => {
+    const guestUser = {
+      id: 'guest',
+      name: 'Guest Cadet',
+      nickname: 'Guest Pilot',
+      email: 'guest@spacefuel.local',
+      isGuest: true
+    };
+    setCurrentUser(guestUser);
+    setToken(null);
+    setActiveView('welcome');
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('spacefuel_token');
     setCurrentUser(null);
     setToken(null);
-    setActiveView('login');
+    setActiveView('home');
   };
 
   const handleNavigate = (view) => {
@@ -84,6 +97,7 @@ export default function App() {
           <Home
             onNavigate={handleNavigate}
             user={currentUser}
+            onPlayAsGuest={handlePlayAsGuest}
           />
         )}
 
@@ -92,6 +106,7 @@ export default function App() {
           <Login
             onLoginSuccess={handleLoginSuccess}
             onSwitchToRegister={() => setActiveView('register')}
+            onPlayAsGuest={handlePlayAsGuest}
           />
         )}
 
@@ -102,12 +117,13 @@ export default function App() {
           />
         )}
 
-        {/* Active Page: Welcome (Post-Login with verified JWT) */}
+        {/* Active Page: Welcome (Post-Login or Guest Cockpit HUD) */}
         {activeView === 'welcome' && (
           <Welcome
             user={currentUser}
             token={token}
             onLogout={handleLogout}
+            onNavigate={handleNavigate}
           />
         )}
 

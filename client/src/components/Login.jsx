@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const API_BASE = 'http://localhost:5000/api';
 
-export default function Login({ onLoginSuccess, onSwitchToRegister }) {
+export default function Login({ onLoginSuccess, onSwitchToRegister, onPlayAsGuest }) {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -125,6 +125,24 @@ export default function Login({ onLoginSuccess, onSwitchToRegister }) {
         <button type="submit" className="retro-btn btn-coral btn-block" disabled={loading}>
           {loading ? 'AUTHENTICATING...' : '▶ LAUNCH SESSION'}
         </button>
+
+        {onPlayAsGuest && (
+          <>
+            <div className="auth-separator">
+              <span className="auth-separator-line"></span>
+              <span className="auth-separator-text">OR</span>
+              <span className="auth-separator-line"></span>
+            </div>
+
+            <button
+              type="button"
+              className="retro-btn btn-outline btn-block guest-login-btn"
+              onClick={onPlayAsGuest}
+            >
+              👾 PLAY AS GUEST (SKIP LOGIN)
+            </button>
+          </>
+        )}
       </form>
 
       <div className="auth-footer-prompt">

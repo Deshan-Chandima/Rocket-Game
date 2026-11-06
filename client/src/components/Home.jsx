@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
 
-export default function Home({ onNavigate, user }) {
+export default function Home({ onNavigate, user, onPlayAsGuest }) {
   const [modalView, setModalView] = useState(null); // null | 'level' | 'leaderboard' | 'quit'
 
-  // Sample arcade leaderboard records
+  const isRegistered = user && !user.isGuest;
+
+  // Sample arcade leaderboard records (Registered pilots only)
   const leaderboardData = [
     { rank: '01', callsign: 'StarVoyager', level: '04', score: '98,400' },
     { rank: '02', callsign: 'NovaCommander', level: '03', score: '84,200' },
     { rank: '03', callsign: 'AstroDave', level: '03', score: '72,150' },
-    { rank: '04', callsign: user?.nickname || 'CosmoPilot', level: '02', score: '58,900', isCurrent: true },
+    {
+      rank: '04',
+      callsign: isRegistered ? user.nickname : 'CosmoPilot',
+      level: '02',
+      score: '58,900',
+      isCurrent: isRegistered
+    },
     { rank: '05', callsign: 'OrbitalFox', level: '01', score: '41,000' }
   ];
 
@@ -16,14 +24,15 @@ export default function Home({ onNavigate, user }) {
     if (user) {
       onNavigate('welcome');
     } else {
-      onNavigate('login');
+      // Guest can play directly without logging in!
+      onPlayAsGuest();
     }
   };
 
   const handleConfirmQuit = () => {
-    alert('Terminal session terminated. Returning to login gate.');
+    alert('Terminal session closed. Cockpit controls in standby.');
     setModalView(null);
-    onNavigate('login');
+    onNavigate('home');
   };
 
   return (
@@ -45,7 +54,11 @@ export default function Home({ onNavigate, user }) {
             </div>
             <h2 className="game-menu-title">MAIN MISSION MENU</h2>
             <p className="game-menu-subtitle">
-              {user ? `PILOT IN COMMAND: ${user.nickname}` : 'AUTHENTICATION REQUIRED FOR HIGH SCORES'}
+              {isRegistered
+                ? `PILOT IN COMMAND: ${user.nickname} [RANK: #04]`
+                : user?.isGuest
+                ? 'PILOT: GUEST • LEADERBOARD DISABLED'
+                : 'FREE TO PLAY AS GUEST • LOGIN TO RANK ON LEADERBOARD'}
             </p>
           </div>
 
@@ -56,7 +69,7 @@ export default function Home({ onNavigate, user }) {
               className="retro-btn btn-coral menu-option-btn"
               onClick={handlePlayClick}
             >
-              <span className="btn-icon">▶</span> PLAY
+              <span className="btn-icon">▶</span> {user ? 'PLAY MISSION' : 'PLAY AS GUEST'}
             </button>
 
             <button
@@ -85,7 +98,13 @@ export default function Home({ onNavigate, user }) {
           </div>
 
           <div className="game-menu-footer">
-            <span className="menu-tip">[ USE MOUSE OR TAP TO SELECT OPTION ]</span>
+            {!isRegistered ? (
+              <span className="menu-tip guest-hint">
+                💡 No login needed to play! Only registered pilots enter the Leaderboard.
+              </span>
+            ) : (
+              <span className="menu-tip">[ USE MOUSE OR TAP TO SELECT OPTION ]</span>
+            )}
           </div>
         </div>
       )}
@@ -157,6 +176,35 @@ export default function Home({ onNavigate, user }) {
             <h3 className="modal-title">🏆 GALAXY LEADERBOARD</h3>
             <span className="modal-badge">TOP PILOTS</span>
           </div>
+
+          {/* Guest Account Leaderboard Restriction Alert */}
+          {!isRegistered && (
+            <div className="leaderboard-guest-banner">
+              <div className="guest-banner-title">
+                <span>⚠️ GUEST PILOTS EXCLUDED FROM LEADERBOARD</span>
+              </div>
+              <p className="guest-banner-desc">
+                Guests can play without restrictions, but high scores are not recorded in galaxy rankings.
+                Login or create a virtual identity to submit your scores.
+              </p>
+              <div className="guest-banner-buttons">
+                <button
+                  type="button"
+                  className="retro-btn btn-teal btn-sm"
+                  onClick={() => onNavigate('login')}
+                >
+                  LOGIN
+                </button>
+                <button
+                  type="button"
+                  className="retro-btn btn-outline btn-sm"
+                  onClick={() => onNavigate('register')}
+                >
+                  REGISTER
+                </button>
+              </div>
+            </div>
+          )}
 
           <div className="leaderboard-table-wrap">
             <table className="retro-table">
