@@ -11,7 +11,7 @@ export default function Navbar({ activeView, onNavigate, user, onLogout }) {
   return (
     <nav className="retro-navbar">
       <div className="navbar-container">
-        {/* Left Navigation Links: Home, About, Games */}
+        {/* Left Navigation Links: Home */}
         <div className={`nav-group nav-left ${mobileMenuOpen ? 'mobile-show' : ''}`}>
           <button
             type="button"
@@ -19,20 +19,6 @@ export default function Navbar({ activeView, onNavigate, user, onLogout }) {
             onClick={() => handleNavClick('home')}
           >
             Home
-          </button>
-          <button
-            type="button"
-            className={`nav-link-btn ${activeView === 'about' ? 'active' : ''}`}
-            onClick={() => handleNavClick('about')}
-          >
-            About
-          </button>
-          <button
-            type="button"
-            className={`nav-link-btn ${activeView === 'games' ? 'active' : ''}`}
-            onClick={() => handleNavClick('games')}
-          >
-            Games
           </button>
         </div>
 
@@ -53,9 +39,9 @@ export default function Navbar({ activeView, onNavigate, user, onLogout }) {
           <div className="ribbon-wing wing-right"></div>
         </div>
 
-        {/* Right Navigation Links: Only Login & Register */}
+        {/* Right Navigation Links: Auth / Pilot / Guest Status */}
         <div className={`nav-group nav-right ${mobileMenuOpen ? 'mobile-show' : ''}`}>
-          {user ? (
+          {user && !user.isGuest ? (
             <div className="user-nav-profile">
               <button
                 type="button"
@@ -75,6 +61,16 @@ export default function Navbar({ activeView, onNavigate, user, onLogout }) {
             </div>
           ) : (
             <div className="auth-nav-buttons">
+              {user?.isGuest && (
+                <button
+                  type="button"
+                  className={`nav-link-btn guest-nav-indicator ${activeView === 'welcome' ? 'active' : ''}`}
+                  onClick={() => handleNavClick('welcome')}
+                  title="Guest Cockpit"
+                >
+                  👾 GUEST PILOT
+                </button>
+              )}
               <button
                 type="button"
                 className={`nav-link-btn nav-login-btn ${activeView === 'login' ? 'active' : ''}`}
