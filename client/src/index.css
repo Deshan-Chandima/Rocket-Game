@@ -56,7 +56,13 @@ html, body {
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-  background: radial-gradient(circle at 50% 15%, #182333 0%, var(--bg-deep-space) 65%);
+  background-color: var(--bg-deep-space);
+  background-image: 
+    linear-gradient(180deg, rgba(12, 18, 27, 0.72) 0%, rgba(12, 18, 27, 0.35) 45%, rgba(12, 18, 27, 0.82) 100%),
+    url('./assets/images/BackgroundImage.jpg');
+  background-position: center bottom;
+  background-size: cover;
+  background-repeat: no-repeat;
   overflow: hidden;
 }
 
@@ -972,6 +978,7 @@ html, body {
    7. SCENERY BACKDROP (ROBOT, GANTRY, LANTERNS) - COMPACT & POSITIONED
    ========================================================================== */
 .station-backdrop-scenery {
+  display: none; /* Replaced by BackgroundImage.jpg */
   position: absolute;
   bottom: 24px; /* Sits right above footer */
   left: 0;
