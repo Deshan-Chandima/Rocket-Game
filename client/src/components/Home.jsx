@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 export default function Home({ onNavigate, user, onPlayAsGuest }) {
   const [modalView, setModalView] = useState(null); // null | 'level' | 'leaderboard' | 'quit'
+  const [toast, setToast] = useState(null); // null | string
+  const toastTimeoutRef = useRef(null);
 
   const isRegistered = user && !user.isGuest;
 
@@ -20,12 +22,30 @@ export default function Home({ onNavigate, user, onPlayAsGuest }) {
     { rank: '05', callsign: 'OrbitalFox', level: '01', score: '41,000' }
   ];
 
+  const triggerToast = (msg) => {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
+    setToast(msg);
+    toastTimeoutRef.current = setTimeout(() => {
+      setToast(null);
+    }, 4000);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const handlePlayClick = () => {
-    if (user) {
+    if (isRegistered) {
       onNavigate('welcome');
     } else {
-      // Guest can play directly without logging in!
-      onPlayAsGuest();
+      // Show beautiful retro toast notification
+      triggerToast('Please login to play! Or choose "Play as Guest" below.');
     }
   };
 
@@ -37,6 +57,37 @@ export default function Home({ onNavigate, user, onPlayAsGuest }) {
 
   return (
     <div className="retro-auth-card home-terminal-card">
+      {/* Beautiful Floating Retro Toast Notification */}
+      {toast && (
+        <div className="retro-toast-container" role="alert">
+          <div className="retro-toast">
+            <div className="toast-content">
+              <span className="toast-icon">🔒</span>
+              <div className="toast-text-wrap">
+                <span className="toast-title">LOGIN TO PLAY</span>
+                <span className="toast-desc">{toast}</span>
+              </div>
+              <button
+                type="button"
+                className="retro-btn btn-coral toast-action-btn"
+                onClick={() => onNavigate('login')}
+              >
+                LOGIN ▶
+              </button>
+              <button
+                type="button"
+                className="toast-close-btn"
+                onClick={() => setToast(null)}
+                aria-label="Dismiss toast"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="toast-progress-bar"></div>
+          </div>
+        </div>
+      )}
+
       {/* Top Terminal Status Bar */}
       <div className="card-terminal-bar">
         <span className="terminal-dot red"></span>
@@ -55,26 +106,38 @@ export default function Home({ onNavigate, user, onPlayAsGuest }) {
             <h2 className="game-menu-title">MAIN MISSION MENU</h2>
             <p className="game-menu-subtitle">
               {isRegistered
-                ? `PILOT IN COMMAND: ${user.nickname} [RANK: #04]`
+                ? `PILOT IN COMMAND: ${user.nickname}`
                 : user?.isGuest
                 ? 'PILOT: GUEST • LEADERBOARD DISABLED'
-                : 'FREE TO PLAY AS GUEST • LOGIN TO RANK ON LEADERBOARD'}
+                : 'SPACE FUEL MISSION CONTROL'}
             </p>
           </div>
 
-          {/* 4 Main Game Options */}
+          {/* Main Game Options */}
           <div className="game-menu-buttons">
+            {/* First button: ALWAYS just says PLAY */}
             <button
               type="button"
               className="retro-btn btn-coral menu-option-btn"
               onClick={handlePlayClick}
             >
-              <span className="btn-icon">▶</span> {user ? 'PLAY MISSION' : 'PLAY AS GUEST'}
+              <span className="btn-icon">▶</span> PLAY
             </button>
+
+            {/* If not logged in: Show Play as Guest button right below Play */}
+            {!isRegistered && (
+              <button
+                type="button"
+                className="retro-btn btn-teal menu-option-btn"
+                onClick={onPlayAsGuest}
+              >
+                <span className="btn-icon">👾</span> PLAY AS GUEST
+              </button>
+            )}
 
             <button
               type="button"
-              className="retro-btn btn-teal menu-option-btn"
+              className="retro-btn btn-outline menu-option-btn"
               onClick={() => setModalView('level')}
             >
               <span className="btn-icon">⭐</span> LEVEL
@@ -98,13 +161,7 @@ export default function Home({ onNavigate, user, onPlayAsGuest }) {
           </div>
 
           <div className="game-menu-footer">
-            {!isRegistered ? (
-              <span className="menu-tip guest-hint">
-                💡 No login needed to play! Only registered pilots enter the Leaderboard.
-              </span>
-            ) : (
-              <span className="menu-tip">[ USE MOUSE OR TAP TO SELECT OPTION ]</span>
-            )}
+            <span className="menu-tip">[ USE MOUSE OR TAP TO SELECT OPTION ]</span>
           </div>
         </div>
       )}
@@ -158,6 +215,17 @@ export default function Home({ onNavigate, user, onPlayAsGuest }) {
             >
               ▶ PLAY THIS LEVEL
             </button>
+
+            {!isRegistered && (
+              <button
+                type="button"
+                className="retro-btn btn-teal"
+                onClick={onPlayAsGuest}
+              >
+                👾 PLAY AS GUEST
+              </button>
+            )}
+
             <button
               type="button"
               className="retro-btn btn-outline"
