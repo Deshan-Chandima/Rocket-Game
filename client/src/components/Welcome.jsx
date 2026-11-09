@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function Welcome({ user, token, onLogout, onNavigate }) {
   const isGuest = user?.isGuest;
   const nickname = user?.nickname || (isGuest ? 'Guest Pilot' : 'Pilot');
+
+  // Read pilot top score from user profile or local records
+  const [topScore] = useState(() => {
+    if (!user || isGuest) return 0;
+    const localScore = localStorage.getItem(`spacefuel_top_${user.id || user.nickname}`);
+    return localScore ? Number(localScore) : (user.topScore || user.score || 0);
+  });
 
   return (
     <div className="retro-auth-card welcome-console-card">
@@ -34,11 +41,47 @@ export default function Welcome({ user, token, onLogout, onNavigate }) {
         <div className="section-divider"></div>
       </div>
 
-      {/* Compact JWT Token proof for registered pilots (Academic marking) */}
-      {!isGuest && token && (
-        <div className="jwt-token-display">
-          <span className="jwt-label">PILOT SECURITY TOKEN (BEARER):</span>
-          <code className="jwt-code">{token.slice(0, 24)}...{token.slice(-12)}</code>
+      {/* Pilot High Score Card (Replaces the raw token display) */}
+      {!isGuest ? (
+        <div className="pilot-score-box">
+          <div className="pilot-score-header">
+            <span className="score-icon">🏆</span>
+            <span className="score-title">PILOT TOP SCORE</span>
+            {topScore > 0 ? (
+              <span className="score-pill-active">RECORD ACTIVE</span>
+            ) : (
+              <span className="score-pill-new">NEW CADET</span>
+            )}
+          </div>
+
+          <div className="pilot-score-body">
+            {topScore > 0 ? (
+              <div className="score-number-wrap">
+                <span className="score-val">{topScore.toLocaleString()}</span>
+                <span className="score-unit">PTS</span>
+              </div>
+            ) : (
+              <div className="score-empty-state">
+                <p className="score-empty-text">NO FLIGHT RECORDS YET</p>
+                <p className="score-empty-hint">
+                  Launch mission now to set your first galactic high score!
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="pilot-score-box guest-mode-box">
+          <div className="pilot-score-header">
+            <span className="score-icon">👾</span>
+            <span className="score-title">GUEST FLIGHT SESSION</span>
+            <span className="score-pill-new">UNRANKED</span>
+          </div>
+          <div className="score-empty-state">
+            <p className="score-empty-hint">
+              Free flight active. Create an account to record your top scores on the Leaderboard!
+            </p>
+          </div>
         </div>
       )}
 
