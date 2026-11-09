@@ -218,6 +218,97 @@ app.get('/api/verify-token', (req, res) => {
   }
 });
 
+/**
+ * GET /api/game/banana-puzzle
+ * Interoperability: Consumes Prof. Marc Conrad's external Banana API
+ * Endpoint: https://marcconrad.com/uob/banana/api.php?out=json
+ */
+app.get('/api/game/banana-puzzle', async (req, res) => {
+  try {
+    const response = await fetch('https://marcconrad.com/uob/banana/api.php?out=json');
+    if (!response.ok) {
+      throw new Error(`External Banana API responded with HTTP ${response.status}`);
+    }
+    const data = await response.json();
+    return res.status(200).json({
+      success: true,
+      source: 'Marc Conrad Banana API (UOB Interoperability)',
+      question: data.question,
+      solution: Number(data.solution)
+    });
+  } catch (error) {
+    console.warn('⚠️ Banana API external fetch issue:', error.message);
+    // Reliable fallback puzzle if external server is momentarily unreachable
+    return res.status(200).json({
+      success: true,
+      source: 'Local Fallback Space Synthesizer',
+      question: 'https://www.sanfoh.com/uob/banana/data/t03ba22752fc047471f63eed3d5n116.png',
+      solution: 6
+    });
+  }
+});
+
+/**
+ * POST /api/game/save-score
+ * Saves pilot high score to database for registered pilots
+ */
+app.post('/api/game/save-score', async (req, res) => {
+  try {
+    const { userId, nickname, score, level } = req.body;
+    if (!nickname || score === undefined) {
+      return res.status(400).json({ success: false, message: 'Missing score payload' });
+    }
+
+    // Ensure scores table exists
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS scores (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NULL,
+        nickname VARCHAR(50) NOT NULL,
+        score INT NOT NULL,
+        level INT DEFAULT 1,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Insert new score record
+    await db.query(
+      'INSERT INTO scores (user_id, nickname, score, level) VALUES (?, ?, ?, ?)',
+      [userId || null, nickname, score, level || 1]
+    );
+
+    return res.status(200).json({ success: true, message: 'Mission score recorded!' });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Could not record score', error: error.message });
+  }
+});
+
+/**
+ * GET /api/game/leaderboard
+ * Returns top 10 recorded scores from database
+ */
+app.get('/api/game/leaderboard', async (req, res) => {
+  try {
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS scores (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NULL,
+        nickname VARCHAR(50) NOT NULL,
+        score INT NOT NULL,
+        level INT DEFAULT 1,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    const [rows] = await db.query(
+      'SELECT nickname, score, level, created_at FROM scores ORDER BY score DESC LIMIT 10'
+    );
+    return res.status(200).json({ success: true, leaderboard: rows });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Leaderboard unavailable', error: error.message });
+  }
+});
+
 // Start Express server
 app.listen(PORT, () => {
   console.log(`🚀 Space Fuel Server listening on port ${PORT}`);

@@ -12,6 +12,8 @@ server/.env
 dist/
 client/dist/
 build/
+.vite/
+client/.vite/
 
 # Logs
 npm-debug.log*

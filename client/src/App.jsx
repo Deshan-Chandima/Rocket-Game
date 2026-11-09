@@ -4,6 +4,7 @@ import Home from './components/Home.jsx';
 import Login from './components/Login.jsx';
 import Register from './components/Register.jsx';
 import Welcome from './components/Welcome.jsx';
+import GameArena from './components/GameArena.jsx';
 import ComingSoon from './components/ComingSoon.jsx';
 
 export default function App() {
@@ -123,6 +124,14 @@ export default function App() {
             user={currentUser}
             token={token}
             onLogout={handleLogout}
+            onNavigate={handleNavigate}
+          />
+        )}
+
+        {/* Active Page: Game Arena (Banana API Star Plasma Reactor) */}
+        {activeView === 'game' && (
+          <GameArena
+            user={currentUser}
             onNavigate={handleNavigate}
           />
         )}
