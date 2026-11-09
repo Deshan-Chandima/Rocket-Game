@@ -90,7 +90,7 @@ export default function Welcome({ user, token, onLogout, onNavigate }) {
         <button
           type="button"
           className="retro-btn btn-coral menu-option-btn"
-          onClick={() => alert(`🚀 Mission ignited! Rocket thrusters online for ${nickname}!`)}
+          onClick={() => onNavigate ? onNavigate('game') : alert(`🚀 Mission ignited!`)}
         >
           <span className="btn-icon">🚀</span> ENGAGE THRUSTERS
         </button>
