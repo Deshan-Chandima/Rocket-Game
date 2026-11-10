@@ -14,6 +14,7 @@ const db = require('./db');
 const app = express();
 const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET || 'spacefuel_super_secret_jwt_key_2026_pilot_auth';
+const BANANA_API_URL = process.env.BANANA_API_URL || 'https://marcconrad.com/uob/banana/api.php?out=json';
 
 // Middleware
 app.use(cors());
@@ -225,7 +226,7 @@ app.get('/api/verify-token', (req, res) => {
  */
 app.get('/api/game/banana-puzzle', async (req, res) => {
   try {
-    const response = await fetch('https://marcconrad.com/uob/banana/api.php?out=json');
+    const response = await fetch(BANANA_API_URL);
     if (!response.ok) {
       throw new Error(`External Banana API responded with HTTP ${response.status}`);
     }
