@@ -134,6 +134,7 @@ DB_USER=root
 DB_PASSWORD=
 DB_NAME=spacefuel_db
 JWT_SECRET=spacefuel_super_secret_jwt_key_2026_pilot_auth
+BANANA_API_URL=https://marcconrad.com/uob/banana/api.php?out=json
 ```
 
 ### 2. Start Backend Server
