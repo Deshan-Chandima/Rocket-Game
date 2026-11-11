@@ -1,0 +1,46 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        space: {
+          black: '#06090e',
+          dark: '#0c121b',
+          surface: '#111a26',
+          card: 'rgba(16, 23, 35, 0.94)',
+          border: 'rgba(245, 151, 121, 0.35)',
+          coral: '#f59779',
+          'coral-bright': '#ff9e80',
+          'coral-dim': '#c5765c',
+          teal: '#8ec5c2',
+          'teal-dark': '#375459',
+          amber: '#f7ca74',
+          green: '#4ade80',
+          red: '#ef4444',
+          cream: '#ede8dc',
+          muted: '#8697a8',
+          dim: '#546475'
+        }
+      },
+      fontFamily: {
+        pixel: ['"Press Start 2P"', 'monospace'],
+        arcade: ['"Silkscreen"', 'monospace'],
+        body: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif']
+      },
+      boxShadow: {
+        'glow-coral': '0 0 15px rgba(245, 151, 121, 0.4)',
+        'glow-teal': '0 0 15px rgba(142, 197, 194, 0.4)',
+        'glow-amber': '0 0 15px rgba(247, 202, 116, 0.4)',
+        'glow-green': '0 0 15px rgba(74, 222, 128, 0.4)',
+      }
+    },
+  },
+  corePlugins: {
+    preflight: false,
+  },
+  plugins: [],
+};

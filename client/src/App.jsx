@@ -75,7 +75,7 @@ export default function App() {
   };
 
   return (
-    <div className="space-arcade-universe">
+    <div className="space-arcade-universe min-h-screen w-full relative flex flex-col items-center select-none overflow-x-hidden">
       {/* 1. Top Retro Navbar (.SPACE.) */}
       <Navbar
         activeView={activeView}
@@ -85,18 +85,20 @@ export default function App() {
       />
 
       {/* 2. Main Hero Banner */}
-      <header className="hero-banner">
-        <div className="hero-title-wrapper">
+      <header className="hero-banner flex flex-col items-center justify-center text-center py-2 relative z-10 w-full">
+        <div className="hero-title-wrapper flex items-center justify-center gap-3">
           <span className="pixel-box-accent"></span>
-          <h1 className="hero-pixel-title">SPACE FUEL</h1>
+          <h1 className="hero-pixel-title font-pixel text-space-coral tracking-widest drop-shadow">SPACE FUEL</h1>
           <span className="pixel-box-accent"></span>
         </div>
-        <p className="hero-subtitle">MISSION CONTROL &bull; ROCKET ODYSSEY</p>
+        <p className="hero-subtitle font-arcade text-space-muted tracking-wider mt-1 text-xs sm:text-sm">
+          MISSION CONTROL &bull; ROCKET ODYSSEY
+        </p>
         <div className="hero-divider"></div>
       </header>
 
       {/* 3. Main Stage Content */}
-      <main className="content-stage">
+      <main className="content-stage w-full max-w-4xl flex items-center justify-center relative z-20 flex-1 px-3 sm:px-4 py-2">
         {/* Active Page: Home (Mission Control Launch Deck) */}
         {activeView === 'home' && (
           <Home

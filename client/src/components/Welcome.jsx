@@ -26,19 +26,19 @@ export default function Welcome({ user, token, onLogout, onNavigate }) {
   }, [user, isGuest]);
 
   return (
-    <div className="retro-auth-card welcome-console-card">
+    <div className="retro-auth-card welcome-console-card w-full max-w-lg mx-auto rounded-lg overflow-hidden border border-space-border shadow-glow-coral">
       {/* Top Terminal Status Bar */}
-      <div className="card-terminal-bar">
+      <div className="card-terminal-bar flex items-center gap-2 px-4 py-2 bg-space-surface border-b border-space-border">
         <span className={`terminal-dot ${isGuest ? 'yellow' : 'green'}`}></span>
         <span className={`terminal-dot ${isGuest ? 'yellow' : 'green'}`}></span>
         <span className={`terminal-dot ${isGuest ? 'yellow' : 'green'}`}></span>
-        <span className="terminal-title">MISSION_CONTROL // COCKPIT_HUD</span>
+        <span className="terminal-title font-arcade text-xs text-space-teal">MISSION_CONTROL // COCKPIT_HUD</span>
       </div>
 
       {/* Main Clean Header */}
-      <div className="welcome-console-header">
+      <div className="welcome-console-header text-center p-5">
         <div
-          className="status-badge-retro"
+          className="status-badge-retro font-arcade text-xs tracking-wider mb-2"
           style={{ color: isGuest ? '#f7ca74' : '#4ade80' }}
         >
           <span className="blinking-cursor">■</span>{' '}
@@ -48,36 +48,42 @@ export default function Welcome({ user, token, onLogout, onNavigate }) {
         </div>
 
         {/* Required User Welcome Message */}
-        <h1 className="welcome-retro-headline">
-          Welcome to Space Fuel, <span className="nickname-accent">{nickname}</span>!
+        <h1 className="welcome-retro-headline font-pixel text-lg sm:text-xl text-space-coral leading-tight">
+          Welcome to Space Fuel, <span className="nickname-accent text-space-amber">{nickname}</span>!
         </h1>
-        <p className="mission-status-headline">Mission is ready.</p>
-        <div className="section-divider"></div>
+        <p className="mission-status-headline font-arcade text-xs text-space-cream mt-1">Mission is ready.</p>
+        <div className="section-divider w-24 h-0.5 bg-space-border mx-auto my-3"></div>
       </div>
 
       {/* Pilot High Score Card (Replaces the raw token display) */}
       {!isGuest ? (
-        <div className="pilot-score-box">
-          <div className="pilot-score-header">
-            <span className="score-icon">🏆</span>
-            <span className="score-title">PILOT TOP SCORE</span>
+        <div className="pilot-score-box mx-5 mb-5 rounded border border-space-border bg-space-surface p-4">
+          <div className="pilot-score-header flex items-center justify-between pb-2 border-b border-space-border">
+            <div className="flex items-center gap-2">
+              <span className="score-icon text-lg">🏆</span>
+              <span className="score-title font-arcade text-xs text-space-teal font-semibold">PILOT TOP SCORE</span>
+            </div>
             {topScore > 0 ? (
-              <span className="score-pill-active">RECORD ACTIVE</span>
+              <span className="score-pill-active font-arcade text-xs px-2 py-0.5 rounded bg-green-950 text-space-green border border-space-green">
+                RECORD ACTIVE
+              </span>
             ) : (
-              <span className="score-pill-new">NEW CADET</span>
+              <span className="score-pill-new font-arcade text-xs px-2 py-0.5 rounded bg-space-dark text-space-amber border border-space-amber">
+                NEW CADET
+              </span>
             )}
           </div>
 
-          <div className="pilot-score-body">
+          <div className="pilot-score-body pt-3 text-center">
             {topScore > 0 ? (
-              <div className="score-number-wrap">
-                <span className="score-val">{topScore.toLocaleString()}</span>
-                <span className="score-unit">PTS</span>
+              <div className="score-number-wrap flex items-baseline justify-center gap-2">
+                <span className="score-val font-pixel text-2xl text-space-amber">{topScore.toLocaleString()}</span>
+                <span className="score-unit font-arcade text-xs text-space-muted">PTS</span>
               </div>
             ) : (
               <div className="score-empty-state">
-                <p className="score-empty-text">NO FLIGHT RECORDS YET</p>
-                <p className="score-empty-hint">
+                <p className="score-empty-text font-arcade text-xs text-space-muted">NO FLIGHT RECORDS YET</p>
+                <p className="score-empty-hint text-xs text-space-dim mt-1">
                   Launch mission now to set your first galactic high score!
                 </p>
               </div>
@@ -85,14 +91,18 @@ export default function Welcome({ user, token, onLogout, onNavigate }) {
           </div>
         </div>
       ) : (
-        <div className="pilot-score-box guest-mode-box">
-          <div className="pilot-score-header">
-            <span className="score-icon">👾</span>
-            <span className="score-title">GUEST FLIGHT SESSION</span>
-            <span className="score-pill-new">UNRANKED</span>
+        <div className="pilot-score-box guest-mode-box mx-5 mb-5 rounded border border-space-border bg-space-surface p-4">
+          <div className="pilot-score-header flex items-center justify-between pb-2 border-b border-space-border">
+            <div className="flex items-center gap-2">
+              <span className="score-icon text-lg">👾</span>
+              <span className="score-title font-arcade text-xs text-space-amber font-semibold">GUEST FLIGHT SESSION</span>
+            </div>
+            <span className="score-pill-new font-arcade text-xs px-2 py-0.5 rounded bg-space-dark text-space-muted border border-space-muted">
+              UNRANKED
+            </span>
           </div>
-          <div className="score-empty-state">
-            <p className="score-empty-hint">
+          <div className="score-empty-state pt-3 text-center">
+            <p className="score-empty-hint text-xs text-space-muted">
               Free flight active. Create an account to record your top scores on the Leaderboard!
             </p>
           </div>
@@ -100,10 +110,10 @@ export default function Welcome({ user, token, onLogout, onNavigate }) {
       )}
 
       {/* Primary Clean Action Buttons */}
-      <div className="console-actions console-actions-vertical">
+      <div className="console-actions console-actions-vertical flex flex-col gap-3 px-5 pb-6">
         <button
           type="button"
-          className="retro-btn btn-coral menu-option-btn"
+          className="retro-btn btn-coral menu-option-btn w-full transition-all duration-200 hover:scale-102 active:scale-98"
           onClick={() => onNavigate ? onNavigate('game') : alert(`🚀 Mission ignited!`)}
         >
           <span className="btn-icon">🚀</span> ENGAGE THRUSTERS
@@ -111,7 +121,7 @@ export default function Welcome({ user, token, onLogout, onNavigate }) {
 
         <button
           type="button"
-          className="retro-btn btn-outline menu-option-btn"
+          className="retro-btn btn-outline menu-option-btn w-full transition-all duration-200 hover:scale-102 active:scale-98"
           onClick={() => onNavigate ? onNavigate('home') : onLogout()}
         >
           <span className="btn-icon">✕</span> BACK TO MENU

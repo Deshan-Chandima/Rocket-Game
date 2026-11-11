@@ -82,37 +82,37 @@ export default function Register({ onSwitchToLogin }) {
   };
 
   return (
-    <div className="retro-auth-card">
-      <div className="card-terminal-bar">
+    <div className="retro-auth-card w-full max-w-lg mx-auto rounded-lg overflow-hidden border border-space-border shadow-glow-coral">
+      <div className="card-terminal-bar flex items-center gap-2 px-4 py-2 bg-space-surface border-b border-space-border">
         <span className="terminal-dot red"></span>
         <span className="terminal-dot yellow"></span>
         <span className="terminal-dot green"></span>
-        <span className="terminal-title">CREW_ENLISTMENT // NEW_RECORD</span>
+        <span className="terminal-title font-arcade text-xs text-space-coral">CREW_ENLISTMENT // NEW_RECORD</span>
       </div>
 
-      <div className="auth-header">
-        <h2 className="auth-pixel-title">ENLIST PILOT</h2>
-        <p className="auth-pixel-subtitle">CREATE TAMPER-PROOF VIRTUAL IDENTITY</p>
+      <div className="auth-header text-center p-5 pb-2">
+        <h2 className="auth-pixel-title font-pixel text-xl text-space-coral tracking-wider">ENLIST PILOT</h2>
+        <p className="auth-pixel-subtitle font-arcade text-xs text-space-muted mt-1">CREATE TAMPER-PROOF VIRTUAL IDENTITY</p>
       </div>
 
       {error && (
-        <div className="retro-alert alert-error">
+        <div className="retro-alert alert-error mx-5 my-2 flex items-center gap-2 p-3 rounded bg-red-950/60 border border-red-500/50 text-red-200 text-xs font-arcade">
           <span className="alert-icon">⚠️</span>
           <span>{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="retro-alert alert-success">
+        <div className="retro-alert alert-success mx-5 my-2 flex items-center gap-2 p-3 rounded bg-green-950/60 border border-green-500/50 text-green-200 text-xs font-arcade">
           <span className="alert-icon">✅</span>
           <span>{success}</span>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="retro-form">
-        <div className="form-row-2">
-          <div className="retro-form-group">
-            <label htmlFor="reg-name">FULL NAME</label>
+      <form onSubmit={handleSubmit} className="retro-form px-5 py-4 flex flex-col gap-3.5">
+        <div className="form-row-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="retro-form-group flex flex-col gap-1 text-left">
+            <label htmlFor="reg-name" className="font-arcade text-xs text-space-teal">FULL NAME</label>
             <div className="input-frame">
               <input
                 id="reg-name"
@@ -236,14 +236,18 @@ export default function Register({ onSwitchToLogin }) {
           </div>
         </div>
 
-        <button type="submit" className="retro-btn btn-coral btn-block" disabled={loading}>
+        <button
+          type="submit"
+          className="retro-btn btn-coral btn-block w-full py-2.5 mt-2 transition-all duration-200 hover:scale-102 active:scale-98"
+          disabled={loading}
+        >
           {loading ? 'ENROLLING IDENTITY...' : '▶ REGISTER PILOT'}
         </button>
       </form>
 
-      <div className="auth-footer-prompt">
+      <div className="auth-footer-prompt flex items-center justify-center gap-2 p-4 bg-space-surface border-t border-space-border text-xs font-arcade text-space-muted">
         <span>ALREADY HAVE CREDENTIALS?</span>
-        <button type="button" className="inline-link" onClick={onSwitchToLogin}>
+        <button type="button" className="inline-link text-space-coral hover:underline font-bold" onClick={onSwitchToLogin}>
           [ RETURN TO LOGIN ]
         </button>
       </div>

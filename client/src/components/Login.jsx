@@ -68,35 +68,35 @@ export default function Login({ onLoginSuccess, onSwitchToRegister, onPlayAsGues
   };
 
   return (
-    <div className="retro-auth-card">
-      <div className="card-terminal-bar">
+    <div className="retro-auth-card w-full max-w-md mx-auto rounded-lg overflow-hidden border border-space-border shadow-glow-coral">
+      <div className="card-terminal-bar flex items-center gap-2 px-4 py-2 bg-space-surface border-b border-space-border">
         <span className="terminal-dot red"></span>
         <span className="terminal-dot yellow"></span>
         <span className="terminal-dot green"></span>
-        <span className="terminal-title">SPACE_FUEL // PILOT_TERMINAL</span>
+        <span className="terminal-title font-arcade text-xs text-space-coral">SPACE_FUEL // PILOT_TERMINAL</span>
       </div>
 
-      <div className="auth-header">
-        <h2 className="auth-pixel-title">PILOT LOGIN</h2>
-        <p className="auth-pixel-subtitle">AUTHENTICATE TO ACCESS MISSION TERMINAL</p>
+      <div className="auth-header text-center p-5 pb-2">
+        <h2 className="auth-pixel-title font-pixel text-xl text-space-coral tracking-wider">PILOT LOGIN</h2>
+        <p className="auth-pixel-subtitle font-arcade text-xs text-space-muted mt-1">AUTHENTICATE TO ACCESS MISSION TERMINAL</p>
       </div>
 
       {error && (
-        <div className="retro-alert alert-error">
+        <div className="retro-alert alert-error mx-5 my-2 flex items-center gap-2 p-3 rounded bg-red-950/60 border border-red-500/50 text-red-200 text-xs font-arcade">
           <span className="alert-icon">⚠️</span>
           <span>{error}</span>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="retro-form">
-        <div className="retro-form-group">
-          <label htmlFor="login-email">CREW EMAIL</label>
+      <form onSubmit={handleSubmit} className="retro-form px-5 py-4 flex flex-col gap-4">
+        <div className="retro-form-group flex flex-col gap-1.5 text-left">
+          <label htmlFor="login-email" className="font-arcade text-xs text-space-teal">CREW EMAIL</label>
           <div className="input-frame">
             <input
               id="login-email"
               name="email"
               type="email"
-              className="retro-input"
+              className="retro-input w-full px-3 py-2 bg-space-dark text-space-cream border border-space-border rounded focus:border-space-coral focus:outline-none transition font-body text-sm"
               placeholder="pilot@spacefuel.io"
               value={formData.email}
               onChange={handleChange}
@@ -106,14 +106,14 @@ export default function Login({ onLoginSuccess, onSwitchToRegister, onPlayAsGues
           </div>
         </div>
 
-        <div className="retro-form-group">
-          <label htmlFor="login-password">ACCESS KEY (PASSWORD)</label>
-          <div className="input-frame password-input-frame">
+        <div className="retro-form-group flex flex-col gap-1.5 text-left">
+          <label htmlFor="login-password" className="font-arcade text-xs text-space-teal">ACCESS KEY (PASSWORD)</label>
+          <div className="input-frame password-input-frame relative flex items-center">
             <input
               id="login-password"
               name="password"
               type={showPassword ? 'text' : 'password'}
-              className="retro-input"
+              className="retro-input w-full px-3 py-2 pr-10 bg-space-dark text-space-cream border border-space-border rounded focus:border-space-coral focus:outline-none transition font-body text-sm"
               placeholder="••••••••••••"
               value={formData.password}
               onChange={handleChange}
@@ -122,7 +122,7 @@ export default function Login({ onLoginSuccess, onSwitchToRegister, onPlayAsGues
             />
             <button
               type="button"
-              className="password-toggle-btn"
+              className="password-toggle-btn absolute right-2 text-space-muted hover:text-space-coral transition p-1"
               onClick={() => setShowPassword(!showPassword)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
               title={showPassword ? 'Hide password' : 'Show password'}
@@ -142,21 +142,25 @@ export default function Login({ onLoginSuccess, onSwitchToRegister, onPlayAsGues
           </div>
         </div>
 
-        <button type="submit" className="retro-btn btn-coral btn-block" disabled={loading}>
+        <button
+          type="submit"
+          className="retro-btn btn-coral btn-block w-full py-2.5 mt-2 transition-all duration-200 hover:scale-102 active:scale-98"
+          disabled={loading}
+        >
           {loading ? 'AUTHENTICATING...' : '▶ LAUNCH SESSION'}
         </button>
 
         {onPlayAsGuest && (
           <>
-            <div className="auth-separator">
-              <span className="auth-separator-line"></span>
-              <span className="auth-separator-text">OR</span>
-              <span className="auth-separator-line"></span>
+            <div className="auth-separator flex items-center my-1 gap-2">
+              <span className="auth-separator-line flex-1 h-px bg-space-border"></span>
+              <span className="auth-separator-text font-arcade text-xs text-space-dim">OR</span>
+              <span className="auth-separator-line flex-1 h-px bg-space-border"></span>
             </div>
 
             <button
               type="button"
-              className="retro-btn btn-outline btn-block guest-login-btn"
+              className="retro-btn btn-outline btn-block guest-login-btn w-full py-2 transition-all duration-200 hover:scale-102 active:scale-98"
               onClick={onPlayAsGuest}
             >
               👾 PLAY AS GUEST (SKIP LOGIN)
@@ -165,9 +169,9 @@ export default function Login({ onLoginSuccess, onSwitchToRegister, onPlayAsGues
         )}
       </form>
 
-      <div className="auth-footer-prompt">
+      <div className="auth-footer-prompt flex items-center justify-center gap-2 p-4 bg-space-surface border-t border-space-border text-xs font-arcade text-space-muted">
         <span>NEW PILOT CADET?</span>
-        <button type="button" className="inline-link" onClick={onSwitchToRegister}>
+        <button type="button" className="inline-link text-space-coral hover:underline font-bold" onClick={onSwitchToRegister}>
           [ CREATE VIRTUAL IDENTITY ]
         </button>
       </div>

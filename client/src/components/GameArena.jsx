@@ -309,34 +309,34 @@ export default function GameArena({ user, onNavigate, initialLevel = 1 }) {
   };
 
   return (
-    <div className="retro-auth-card game-arena-card">
+    <div className="retro-auth-card game-arena-card w-full max-w-4xl mx-auto rounded-lg overflow-hidden border border-space-border shadow-glow-coral">
       {/* Top HUD Terminal Header */}
-      <div className="card-terminal-bar game-hud-bar">
-        <div className="hud-left">
+      <div className="card-terminal-bar game-hud-bar flex items-center justify-between px-4 py-2 bg-space-surface border-b border-space-border">
+        <div className="hud-left flex items-center gap-2">
           <span className="terminal-dot green"></span>
-          <span className="hud-callsign">👨‍🚀 {nickname}</span>
-          {isGuest && <span className="guest-badge-sm">GUEST</span>}
+          <span className="hud-callsign font-arcade text-xs text-space-green font-bold">👨‍🚀 {nickname}</span>
+          {isGuest && <span className="guest-badge-sm font-arcade text-xs px-1.5 py-0.5 rounded bg-space-dark text-space-amber border border-space-amber">GUEST</span>}
         </div>
         <div className="hud-center">
-          <span className="hud-mission-title">STAR PLASMA SYNTHESIZER</span>
+          <span className="hud-mission-title font-pixel text-xs sm:text-sm text-space-coral tracking-wider">STAR PLASMA SYNTHESIZER</span>
         </div>
-        <div className="hud-right">
-          <span className="hud-score-label">SCORE:</span>
-          <span className="hud-score-val">{score.toLocaleString()}</span>
+        <div className="hud-right flex items-center gap-1.5 font-arcade text-xs">
+          <span className="hud-score-label text-space-muted">SCORE:</span>
+          <span className="hud-score-val text-space-amber font-bold font-pixel text-sm">{score.toLocaleString()}</span>
         </div>
       </div>
 
       {/* Cockpit Gauges Bar: Fuel & Shields & Timer */}
-      <div className="cockpit-telemetry-row">
+      <div className="cockpit-telemetry-row flex flex-wrap items-center justify-between gap-3 px-4 py-2 bg-space-surface/90 border-b border-space-border">
         {/* Fuel Gauge */}
-        <div className="fuel-gauge-box">
-          <div className="gauge-label-row">
-            <span className="gauge-label">🚀 ROCKET FUEL</span>
-            <span className="gauge-val">{fuel}%</span>
+        <div className="fuel-gauge-box flex-1 min-w-[140px]">
+          <div className="gauge-label-row flex justify-between font-arcade text-xs mb-1">
+            <span className="gauge-label text-space-teal">🚀 ROCKET FUEL</span>
+            <span className="gauge-val text-space-amber font-bold">{fuel}%</span>
           </div>
-          <div className="fuel-progress-track">
+          <div className="fuel-progress-track w-full h-2 rounded bg-space-dark overflow-hidden">
             <div
-              className="fuel-progress-fill"
+              className="fuel-progress-fill h-full transition-all duration-300"
               style={{
                 width: `${fuel}%`,
                 background: fuel >= 75 ? '#4ade80' : fuel >= 40 ? '#f7ca74' : '#f59779'
@@ -346,13 +346,13 @@ export default function GameArena({ user, onNavigate, initialLevel = 1 }) {
         </div>
 
         {/* Shields / Lives */}
-        <div className="shields-box">
-          <span className="shields-label">SHIELDS:</span>
-          <div className="shields-icons">
+        <div className="shields-box flex items-center gap-2">
+          <span className="shields-label font-arcade text-xs text-space-muted">SHIELDS:</span>
+          <div className="shields-icons flex gap-1">
             {[1, 2, 3].map((s) => (
               <span
                 key={s}
-                className={`shield-heart ${s <= shields ? 'active' : 'depleted'}`}
+                className={`shield-heart text-sm transition-transform duration-200 ${s <= shields ? 'active scale-100' : 'depleted opacity-40 scale-90'}`}
               >
                 {s <= shields ? '❤️' : '🖤'}
               </span>
@@ -361,13 +361,13 @@ export default function GameArena({ user, onNavigate, initialLevel = 1 }) {
         </div>
 
         {/* Countdown Timer */}
-        <div className={`countdown-timer-box ${timeLeft <= 5 ? 'timer-critical' : ''}`}>
+        <div className={`countdown-timer-box flex items-center gap-1 px-2.5 py-1 rounded bg-space-dark border border-space-border font-arcade text-xs ${timeLeft <= 5 ? 'timer-critical text-space-red border-red-500 animate-pulse' : 'text-space-amber'}`}>
           <span className="timer-icon">⏱️</span>
-          <span className="timer-val">{timeLeft}s</span>
+          <span className="timer-val font-bold">{timeLeft}s</span>
         </div>
 
         {/* Level / Sector HUD Badge */}
-        <div className="sector-hud-badge">
+        <div className="sector-hud-badge font-arcade text-xs px-2.5 py-1 rounded bg-teal-950/40 text-space-teal border border-space-teal">
           <span>{currentConfig.badge} &bull; LVL 0{level}/3</span>
         </div>
       </div>
@@ -549,15 +549,15 @@ export default function GameArena({ user, onNavigate, initialLevel = 1 }) {
 
           {/* Arcade Keypad (0 - 9) */}
           <div className="arcade-keypad-section">
-            <span className="keypad-prompt">
+            <span className="keypad-prompt font-arcade text-xs text-space-muted">
               INPUT MISSING VALUE (CLICK BUTTON OR PRESS KEY 0-9):
             </span>
-            <div className="arcade-keypad-grid">
+            <div className="arcade-keypad-grid grid grid-cols-5 gap-2 mt-2">
               {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((digit) => (
                 <button
                   key={digit}
                   type="button"
-                  className="keypad-btn"
+                  className="keypad-btn transition-all duration-150 hover:scale-105 active:scale-95 font-pixel text-lg py-2.5"
                   disabled={loadingPuzzle || isSubmittingRef.current || gameState !== 'playing'}
                   onClick={() => handleAnswer(digit)}
                 >

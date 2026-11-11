@@ -73,27 +73,27 @@ export default function Home({ onNavigate, user, onPlayAsGuest }) {
   };
 
   return (
-    <div className="retro-auth-card home-terminal-card">
+    <div className="retro-auth-card home-terminal-card w-full max-w-lg mx-auto rounded-lg overflow-hidden border border-space-border shadow-glow-coral">
       {/* Beautiful Floating Retro Toast Notification */}
       {toast && (
         <div className="retro-toast-container" role="alert">
           <div className="retro-toast">
-            <div className="toast-content">
-              <span className="toast-icon">🔒</span>
-              <div className="toast-text-wrap">
-                <span className="toast-title">LOGIN TO PLAY</span>
-                <span className="toast-desc">{toast}</span>
+            <div className="toast-content flex items-center gap-3">
+              <span className="toast-icon text-lg">🔒</span>
+              <div className="toast-text-wrap flex flex-col text-left">
+                <span className="toast-title font-arcade text-xs text-space-amber font-bold">LOGIN TO PLAY</span>
+                <span className="toast-desc text-xs text-space-cream">{toast}</span>
               </div>
               <button
                 type="button"
-                className="retro-btn btn-coral toast-action-btn"
+                className="retro-btn btn-coral toast-action-btn transition-all duration-200 hover:scale-105"
                 onClick={() => onNavigate('login')}
               >
                 LOGIN ▶
               </button>
               <button
                 type="button"
-                className="toast-close-btn"
+                className="toast-close-btn text-space-muted hover:text-white transition"
                 onClick={() => setToast(null)}
                 aria-label="Dismiss toast"
               >
@@ -106,22 +106,22 @@ export default function Home({ onNavigate, user, onPlayAsGuest }) {
       )}
 
       {/* Top Terminal Status Bar */}
-      <div className="card-terminal-bar">
+      <div className="card-terminal-bar flex items-center gap-2 px-4 py-2 bg-space-surface border-b border-space-border">
         <span className="terminal-dot red"></span>
         <span className="terminal-dot yellow"></span>
         <span className="terminal-dot green"></span>
-        <span className="terminal-title">GAME_MENU // SELECT_OPTION</span>
+        <span className="terminal-title font-arcade text-xs text-space-coral">GAME_MENU // SELECT_OPTION</span>
       </div>
 
       {/* Main Menu View (When no modal is active) */}
       {!modalView && (
-        <div className="game-menu-container">
-          <div className="game-menu-header">
-            <div className="status-badge-retro">
+        <div className="game-menu-container flex flex-col items-center text-center p-5">
+          <div className="game-menu-header mb-4">
+            <div className="status-badge-retro font-arcade text-xs text-space-green tracking-wider mb-1">
               <span className="blinking-cursor">■</span> ARCADE TERMINAL READY
             </div>
-            <h2 className="game-menu-title">MAIN MISSION MENU</h2>
-            <p className="game-menu-subtitle">
+            <h2 className="game-menu-title font-pixel text-xl text-space-coral tracking-wider">MAIN MISSION MENU</h2>
+            <p className="game-menu-subtitle font-arcade text-xs text-space-muted mt-1">
               {isRegistered
                 ? `PILOT IN COMMAND: ${user.nickname}`
                 : user?.isGuest
@@ -131,11 +131,11 @@ export default function Home({ onNavigate, user, onPlayAsGuest }) {
           </div>
 
           {/* Main Game Options */}
-          <div className="game-menu-buttons">
+          <div className="game-menu-buttons flex flex-col gap-3 w-full max-w-xs">
             {/* First button: ALWAYS just says PLAY */}
             <button
               type="button"
-              className="retro-btn btn-coral menu-option-btn"
+              className="retro-btn btn-coral menu-option-btn w-full py-2.5 transition-all duration-200 hover:scale-102 active:scale-98"
               onClick={handlePlayClick}
             >
               <span className="btn-icon">▶</span> PLAY
@@ -145,7 +145,7 @@ export default function Home({ onNavigate, user, onPlayAsGuest }) {
             {!isRegistered && (
               <button
                 type="button"
-                className="retro-btn btn-teal menu-option-btn"
+                className="retro-btn btn-teal menu-option-btn w-full py-2.5 transition-all duration-200 hover:scale-102 active:scale-98"
                 onClick={onPlayAsGuest}
               >
                 <span className="btn-icon">👾</span> PLAY AS GUEST
@@ -154,7 +154,7 @@ export default function Home({ onNavigate, user, onPlayAsGuest }) {
 
             <button
               type="button"
-              className="retro-btn btn-outline menu-option-btn"
+              className="retro-btn btn-outline menu-option-btn w-full py-2.5 transition-all duration-200 hover:scale-102 active:scale-98"
               onClick={() => setModalView('level')}
             >
               <span className="btn-icon">⭐</span> LEVEL
@@ -162,7 +162,7 @@ export default function Home({ onNavigate, user, onPlayAsGuest }) {
 
             <button
               type="button"
-              className="retro-btn btn-outline menu-option-btn"
+              className="retro-btn btn-outline menu-option-btn w-full py-2.5 transition-all duration-200 hover:scale-102 active:scale-98"
               onClick={() => setModalView('leaderboard')}
             >
               <span className="btn-icon">🏆</span> LEADERBOARD
@@ -170,15 +170,15 @@ export default function Home({ onNavigate, user, onPlayAsGuest }) {
 
             <button
               type="button"
-              className="retro-btn btn-quit menu-option-btn"
+              className="retro-btn btn-quit menu-option-btn w-full py-2.5 transition-all duration-200 hover:scale-102 active:scale-98"
               onClick={() => setModalView('quit')}
             >
               <span className="btn-icon">✕</span> QUIT
             </button>
           </div>
 
-          <div className="game-menu-footer">
-            <span className="menu-tip">[ USE MOUSE OR TAP TO SELECT OPTION ]</span>
+          <div className="game-menu-footer mt-5">
+            <span className="menu-tip font-arcade text-xs text-space-dim">[ USE MOUSE OR TAP TO SELECT OPTION ]</span>
           </div>
         </div>
       )}
