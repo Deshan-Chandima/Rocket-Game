@@ -286,7 +286,7 @@ app.post('/api/game/save-score', async (req, res) => {
 
 /**
  * GET /api/game/leaderboard
- * Returns top 10 recorded scores from database
+ * Returns top 10 recorded scores from database (highest personal best per pilot)
  */
 app.get('/api/game/leaderboard', async (req, res) => {
   try {
@@ -301,12 +301,38 @@ app.get('/api/game/leaderboard', async (req, res) => {
       )
     `);
 
-    const [rows] = await db.query(
-      'SELECT nickname, score, level, created_at FROM scores ORDER BY score DESC LIMIT 10'
-    );
+    const [rows] = await db.query(`
+      SELECT 
+        nickname, 
+        MAX(score) AS score, 
+        MAX(level) AS level, 
+        MAX(created_at) AS created_at 
+      FROM scores 
+      GROUP BY nickname 
+      ORDER BY score DESC 
+      LIMIT 10
+    `);
     return res.status(200).json({ success: true, leaderboard: rows });
   } catch (error) {
     return res.status(500).json({ success: false, message: 'Leaderboard unavailable', error: error.message });
+  }
+});
+
+/**
+ * GET /api/game/pilot-best/:nickname
+ * Returns single pilot's highest recorded score from database
+ */
+app.get('/api/game/pilot-best/:nickname', async (req, res) => {
+  try {
+    const { nickname } = req.params;
+    const [rows] = await db.query(
+      'SELECT MAX(score) AS topScore FROM scores WHERE nickname = ?',
+      [nickname]
+    );
+    const topScore = rows[0]?.topScore || 0;
+    return res.status(200).json({ success: true, topScore });
+  } catch (error) {
+    return res.status(500).json({ success: false, topScore: 0 });
   }
 });
 

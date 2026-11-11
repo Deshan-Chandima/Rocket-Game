@@ -29,17 +29,22 @@ To escape Earth's orbit and achieve escape velocity into deep space, the pilot's
    - Live Pilot Callsign & Status (Registered vs. Guest).
    - Fuel Tank Capacity Gauge (`0%` to `100%`).
    - 3 Shield Generators (`❤️❤️❤️`).
-   - 15-second countdown timer with critical audio-visual alerts (`⏱️ 15s`).
-2. **Visual Rocket Launch Flight Silo**:
-   - Real-time rocket elevation track: `0% Launch Pad` ➔ `25% Stratosphere` ➔ `50% Mesosphere` ➔ `75% Exosphere Orbit` ➔ `100% Deep Space`.
+   - Sector-adaptive countdown timer with critical audio-visual alerts (`⏱️ 35s` ➔ `⏱️ 25s` ➔ `⏱️ 20s`).
+2. **Multi-Level Sector Progression (3 Unique Difficulty Stages)**:
+   - **Level 1 (Sector 01: Earth Orbital Escape)**: `35s` timer, `1,000 PTS` per correct formula, `+2,000 PTS` booster separation bonus.
+   - **Level 2 (Sector 02: Asteroid Belt Transit)**: `25s` timer, `1,500 PTS` per correct formula, `+3,000 PTS` sector bonus + `+1 Shield Generator repair`.
+   - **Level 3 (Sector 03: Hyper-Warp Gateway)**: `20s` timer, `2,000 PTS` per correct formula, `+5,000 PTS` Galaxy Mastery bonus on final victory!
+   - Sector Selector available directly on the Home Screen menu (`⭐ LEVEL`).
+3. **Visual Rocket Launch Flight Silo**:
+   - Real-time rocket elevation track per sector with adaptive stage indicators.
    - Custom SVG pixel rocket with dual multi-plume plasma thruster flames.
-   - Atmospheric depth with twinkling star clusters, orbiting planet, and drifting stratosphere clouds.
+   - Atmospheric depth with twinkling star clusters, orbiting celestial bodies, and drifting cosmic clouds.
    - Ground launch gantry tower with blinking aviation beacons, hazard stripes, and steam vents.
    - Dynamic animations: Thruster blast on correct answer, ship wobble on error, hyperspace launch on victory!
-3. **Guest Play & Leaderboard Integrity**:
+4. **Guest Play & Leaderboard Integrity**:
    - Instant guest access without login.
    - Guest scores are excluded from the Galaxy Leaderboard to preserve competitive rankings for registered pilots.
-4. **Input Flexibility**:
+5. **Input Flexibility**:
    - On-screen retro arcade keypad (`0` through `9`).
    - Physical computer keyboard event listener (type keys `0-9` directly).
 

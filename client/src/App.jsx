@@ -11,6 +11,7 @@ export default function App() {
   const [activeView, setActiveView] = useState('home'); // 'home' | 'login' | 'register' | 'welcome' | 'about' | 'games'
   const [currentUser, setCurrentUser] = useState(null);
   const [token, setToken] = useState(() => localStorage.getItem('spacefuel_token') || null);
+  const [gameLevel, setGameLevel] = useState(1);
 
   // Automatically verify saved JWT on initial load
   useEffect(() => {
@@ -65,7 +66,10 @@ export default function App() {
     setActiveView('home');
   };
 
-  const handleNavigate = (view) => {
+  const handleNavigate = (view, params) => {
+    if (params && params.level) {
+      setGameLevel(Number(params.level));
+    }
     setActiveView(view);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -133,6 +137,7 @@ export default function App() {
           <GameArena
             user={currentUser}
             onNavigate={handleNavigate}
+            initialLevel={gameLevel}
           />
         )}
 

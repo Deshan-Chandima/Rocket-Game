@@ -2,25 +2,42 @@ import React, { useState, useRef, useEffect } from 'react';
 
 export default function Home({ onNavigate, user, onPlayAsGuest }) {
   const [modalView, setModalView] = useState(null); // null | 'level' | 'leaderboard' | 'quit'
+  const [selectedLevel, setSelectedLevel] = useState(1);
   const [toast, setToast] = useState(null); // null | string
   const toastTimeoutRef = useRef(null);
 
   const isRegistered = user && !user.isGuest;
 
-  // Sample arcade leaderboard records (Registered pilots only)
-  const leaderboardData = [
-    { rank: '01', callsign: 'StarVoyager', level: '04', score: '98,400' },
-    { rank: '02', callsign: 'NovaCommander', level: '03', score: '84,200' },
-    { rank: '03', callsign: 'AstroDave', level: '03', score: '72,150' },
-    {
-      rank: '04',
-      callsign: isRegistered ? user.nickname : 'CosmoPilot',
-      level: '02',
-      score: '58,900',
-      isCurrent: isRegistered
-    },
-    { rank: '05', callsign: 'OrbitalFox', level: '01', score: '41,000' }
-  ];
+  // Live Galaxy Leaderboard records fetched from MySQL database
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
+  const [leaderboardError, setLeaderboardError] = useState(null);
+
+  const fetchLeaderboard = async () => {
+    setLoadingLeaderboard(true);
+    setLeaderboardError(null);
+    try {
+      const res = await fetch('http://localhost:5000/api/game/leaderboard');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (data.success && Array.isArray(data.leaderboard)) {
+        setLeaderboard(data.leaderboard);
+      } else {
+        setLeaderboard([]);
+      }
+    } catch (err) {
+      console.warn('Leaderboard fetch error:', err.message);
+      setLeaderboardError('Could not connect to Galaxy Mission Control database.');
+    } finally {
+      setLoadingLeaderboard(false);
+    }
+  };
+
+  useEffect(() => {
+    if (modalView === 'leaderboard') {
+      fetchLeaderboard();
+    }
+  }, [modalView]);
 
   const triggerToast = (msg) => {
     if (toastTimeoutRef.current) {
@@ -167,82 +184,166 @@ export default function Home({ onNavigate, user, onPlayAsGuest }) {
       )}
 
       {/* LEVEL MODAL */}
-      {modalView === 'level' && (
-        <div className="modal-inner-view">
-          <div className="modal-header-row">
-            <h3 className="modal-title">⭐ CURRENT MISSION LEVEL</h3>
-            <span className="modal-badge">SECTOR 01</span>
-          </div>
+      {modalView === 'level' && (() => {
+        const sectorData = [
+          {
+            num: 1,
+            badge: 'SECTOR 01',
+            title: 'EARTH ORBITAL ESCAPE',
+            timer: '35 SECONDS',
+            pts: '1,000 PTS / PUZZLE',
+            hazard: 'LOW // GREEN ZONE',
+            hazardColor: '#4ade80',
+            objective: 'Synthesize Star Plasma fuel to break free of Earth gravity well.',
+            bonus: '+2,000 PTS'
+          },
+          {
+            num: 2,
+            badge: 'SECTOR 02',
+            title: 'ASTEROID BELT TRANSIT',
+            timer: '25 SECONDS',
+            pts: '1,500 PTS / PUZZLE',
+            hazard: 'MEDIUM // ASTEROID BELT',
+            hazardColor: '#f7ca74',
+            objective: 'Navigate dense asteroid corridor under accelerated reactor decay.',
+            bonus: '+3,000 PTS + ❤️ SHIELD REPAIR'
+          },
+          {
+            num: 3,
+            badge: 'SECTOR 03',
+            title: 'HYPER-WARP GATEWAY',
+            timer: '20 SECONDS',
+            pts: '2,000 PTS / PUZZLE',
+            hazard: 'EXTREME // GRAVITATIONAL WARP',
+            hazardColor: '#ef4444',
+            objective: 'Achieve terminal escape velocity & conquer deep space.',
+            bonus: '+5,000 GALAXY MASTERY BONUS'
+          }
+        ];
+        const currentSector = sectorData.find(s => s.num === selectedLevel) || sectorData[0];
 
-          <div className="level-status-box">
-            <div className="level-header-bar">
-              <span className="level-number">LEVEL 01</span>
-              <span className="level-name">EARTH ORBITAL ESCAPE</span>
+        return (
+          <div className="modal-inner-view">
+            <div className="modal-header-row">
+              <h3 className="modal-title">⭐ MISSION SECTOR SELECTOR</h3>
+              <span className="modal-badge">{currentSector.badge}</span>
             </div>
 
-            <div className="level-details-list">
-              <div className="level-detail-item">
-                <span className="lvl-label">OBJECTIVE:</span>
-                <span className="lvl-val">Harvest 100 Star Plasma units & avoid orbital debris.</span>
+            {/* Sector Tabs (Level 1, 2, 3) */}
+            <div className="level-tabs-row">
+              {sectorData.map(sec => (
+                <button
+                  key={sec.num}
+                  type="button"
+                  className={`level-tab-btn ${selectedLevel === sec.num ? 'active' : ''}`}
+                  onClick={() => setSelectedLevel(sec.num)}
+                >
+                  <span>LEVEL 0{sec.num}</span>
+                  <span className="level-tab-timer">⏱️ {sec.timer.split(' ')[0]}s</span>
+                </button>
+              ))}
+            </div>
+
+            <div className="level-status-box">
+              <div className="level-header-bar">
+                <span className="level-number">{currentSector.badge}</span>
+                <span className="level-name">{currentSector.title}</span>
               </div>
-              <div className="level-detail-item">
-                <span className="lvl-label">GRAVITY WELL:</span>
-                <span className="lvl-val">0.32G (Earth Exosphere)</span>
+
+              <div className="level-details-list">
+                <div className="level-detail-item">
+                  <span className="lvl-label">OBJECTIVE:</span>
+                  <span className="lvl-val">{currentSector.objective}</span>
+                </div>
+                <div className="level-detail-item">
+                  <span className="lvl-label">REACTOR TIMER:</span>
+                  <span className="lvl-val" style={{ color: '#38bdf8', fontWeight: 700 }}>
+                    ⏱️ {currentSector.timer}
+                  </span>
+                </div>
+                <div className="level-detail-item">
+                  <span className="lvl-label">BASE SCORE:</span>
+                  <span className="lvl-val" style={{ color: '#f7ca74' }}>{currentSector.pts}</span>
+                </div>
+                <div className="level-detail-item">
+                  <span className="lvl-label">SECTOR HAZARD:</span>
+                  <span className="lvl-val" style={{ color: currentSector.hazardColor }}>
+                    {currentSector.hazard}
+                  </span>
+                </div>
+                <div className="level-detail-item">
+                  <span className="lvl-label">CLEAR REWARD:</span>
+                  <span className="lvl-val" style={{ color: '#4ade80' }}>{currentSector.bonus}</span>
+                </div>
               </div>
-              <div className="level-detail-item">
-                <span className="lvl-label">ASTEROID DENSITY:</span>
-                <span className="lvl-val" style={{ color: '#4ade80' }}>LOW // GREEN ZONE</span>
-              </div>
-              <div className="level-detail-item">
-                <span className="lvl-label">TARGET SCORE:</span>
-                <span className="lvl-val" style={{ color: '#f7ca74' }}>50,000 PTS</span>
+
+              <div className="level-progress-bar-wrap">
+                <span className="progress-label">MISSION READINESS &bull; LEVEL 0{selectedLevel} OF 03</span>
+                <div className="progress-track">
+                  <div
+                    className="progress-fill"
+                    style={{ width: `${(selectedLevel / 3) * 100}%` }}
+                  ></div>
+                </div>
               </div>
             </div>
 
-            <div className="level-progress-bar-wrap">
-              <span className="progress-label">LEVEL READINESS</span>
-              <div className="progress-track">
-                <div className="progress-fill" style={{ width: '75%' }}></div>
-              </div>
-            </div>
-          </div>
-
-          <div className="modal-actions-row">
-            <button
-              type="button"
-              className="retro-btn btn-coral"
-              onClick={handlePlayClick}
-            >
-              ▶ PLAY THIS LEVEL
-            </button>
-
-            {!isRegistered && (
+            <div className="modal-actions-row">
               <button
                 type="button"
-                className="retro-btn btn-teal"
-                onClick={onPlayAsGuest}
+                className="retro-btn btn-coral"
+                onClick={() => {
+                  if (isRegistered) {
+                    onNavigate('game', { level: selectedLevel });
+                  } else {
+                    triggerToast('Please login to play! Or choose "Play as Guest" below.');
+                  }
+                }}
               >
-                👾 PLAY AS GUEST
+                ▶ LAUNCH LEVEL 0{selectedLevel}
               </button>
-            )}
 
-            <button
-              type="button"
-              className="retro-btn btn-outline"
-              onClick={() => setModalView(null)}
-            >
-              BACK TO MENU
-            </button>
+              {!isRegistered && (
+                <button
+                  type="button"
+                  className="retro-btn btn-teal"
+                  onClick={() => {
+                    onPlayAsGuest();
+                    onNavigate('game', { level: selectedLevel });
+                  }}
+                >
+                  👾 GUEST LAUNCH
+                </button>
+              )}
+
+              <button
+                type="button"
+                className="retro-btn btn-outline"
+                onClick={() => setModalView(null)}
+              >
+                BACK TO MENU
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* LEADERBOARD MODAL */}
       {modalView === 'leaderboard' && (
         <div className="modal-inner-view">
           <div className="modal-header-row">
             <h3 className="modal-title">🏆 GALAXY LEADERBOARD</h3>
-            <span className="modal-badge">TOP PILOTS</span>
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <button
+                type="button"
+                className="leaderboard-refresh-btn"
+                onClick={fetchLeaderboard}
+                title="Refresh Galaxy Standings"
+              >
+                🔄 REFRESH
+              </button>
+              <span className="modal-badge">LIVE ARCHIVES</span>
+            </div>
           </div>
 
           {/* Guest Account Leaderboard Restriction Alert */}
@@ -275,28 +376,59 @@ export default function Home({ onNavigate, user, onPlayAsGuest }) {
           )}
 
           <div className="leaderboard-table-wrap">
-            <table className="retro-table">
-              <thead>
-                <tr>
-                  <th>RANK</th>
-                  <th>PILOT CALLSIGN</th>
-                  <th>LEVEL</th>
-                  <th>SCORE</th>
-                </tr>
-              </thead>
-              <tbody>
-                {leaderboardData.map((row) => (
-                  <tr key={row.rank} className={row.isCurrent ? 'current-pilot-row' : ''}>
-                    <td className="rank-cell">#{row.rank}</td>
-                    <td className="callsign-cell">
-                      {row.callsign} {row.isCurrent && <span className="you-pill">YOU</span>}
-                    </td>
-                    <td className="level-cell">LVL {row.level}</td>
-                    <td className="score-cell">{row.score}</td>
+            {loadingLeaderboard ? (
+              <div className="leaderboard-status-msg">
+                <span>📡 QUERYING GALAXY MISSION ARCHIVES...</span>
+              </div>
+            ) : leaderboardError ? (
+              <div className="leaderboard-empty-msg">
+                <p style={{ color: '#ef4444', marginBottom: '0.5rem' }}>⚠️ {leaderboardError}</p>
+                <button
+                  type="button"
+                  className="retro-btn btn-outline btn-sm"
+                  onClick={fetchLeaderboard}
+                >
+                  RETRY
+                </button>
+              </div>
+            ) : leaderboard.length === 0 ? (
+              <div className="leaderboard-empty-msg">
+                <p>🚀 NO FLIGHT RECORDS IN THE GALAXY ARCHIVES YET.</p>
+                <p style={{ fontSize: '0.75rem', marginTop: '0.35rem', color: '#94a3b8' }}>
+                  Launch a mission and synthesize star plasma to set the first galaxy high score!
+                </p>
+              </div>
+            ) : (
+              <table className="retro-table">
+                <thead>
+                  <tr>
+                    <th>RANK</th>
+                    <th>PILOT CALLSIGN</th>
+                    <th>LEVEL</th>
+                    <th>SCORE</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {leaderboard.map((row, index) => {
+                    const rankNum = String(index + 1).padStart(2, '0');
+                    const isCurrent =
+                      isRegistered &&
+                      user?.nickname &&
+                      row.nickname?.toLowerCase() === user.nickname?.toLowerCase();
+                    return (
+                      <tr key={index} className={isCurrent ? 'current-pilot-row' : ''}>
+                        <td className="rank-cell">#{rankNum}</td>
+                        <td className="callsign-cell">
+                          {row.nickname} {isCurrent && <span className="you-pill">YOU</span>}
+                        </td>
+                        <td className="level-cell">LVL {String(row.level || 1).padStart(2, '0')}</td>
+                        <td className="score-cell">{Number(row.score).toLocaleString()}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            )}
           </div>
 
           <div className="modal-actions-row">

@@ -1,15 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function Welcome({ user, token, onLogout, onNavigate }) {
   const isGuest = user?.isGuest;
   const nickname = user?.nickname || (isGuest ? 'Guest Pilot' : 'Pilot');
 
-  // Read pilot top score from user profile or local records
-  const [topScore] = useState(() => {
+  // Read pilot top score from user profile, local records, and server sync
+  const [topScore, setTopScore] = useState(() => {
     if (!user || isGuest) return 0;
     const localScore = localStorage.getItem(`spacefuel_top_${user.id || user.nickname}`);
     return localScore ? Number(localScore) : (user.topScore || user.score || 0);
   });
+
+  useEffect(() => {
+    if (!user || isGuest || !user.nickname) return;
+    fetch(`http://localhost:5000/api/game/pilot-best/${encodeURIComponent(user.nickname)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.topScore) {
+          const dbScore = Number(data.topScore);
+          setTopScore((prev) => Math.max(prev, dbScore));
+          localStorage.setItem(`spacefuel_top_${user.id || user.nickname}`, dbScore);
+        }
+      })
+      .catch((err) => console.warn('Could not sync pilot top score:', err.message));
+  }, [user, isGuest]);
 
   return (
     <div className="retro-auth-card welcome-console-card">
