@@ -1,0 +1,32 @@
+const jwt = require('jsonwebtoken');
+
+const verifyTokenMiddleware = (req, res, next) => {
+  try {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) {
+      return res.status(401).json({
+        success: false,
+        message: 'No authorization token provided.'
+      });
+    }
+
+    const token = authHeader.startsWith('Bearer ')
+      ? authHeader.slice(7)
+      : authHeader;
+
+    const JWT_SECRET = process.env.JWT_SECRET || 'spacefuel_super_secret_jwt_key_2026_pilot_auth';
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: 'Invalid, tampered, or expired token.',
+      error: error.message
+    });
+  }
+};
+
+module.exports = {
+  verifyTokenMiddleware
+};

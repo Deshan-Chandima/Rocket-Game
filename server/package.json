@@ -1,11 +1,11 @@
 {
   "name": "space-fuel-server",
   "version": "1.0.0",
-  "description": "Backend authentication API for Space Fuel",
-  "main": "index.js",
+  "description": "Backend authentication and game API for Space Fuel",
+  "main": "src/server.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "node --watch index.js"
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
